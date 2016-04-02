@@ -118,6 +118,7 @@ printf("%s",h);
 <AUT>"\}"  {inser(yytext); }  
 <AUT>"\,"[ ]+  {f=trata();f=funcao(f);} 
 <AUT>[ ]+"and"[ ]+  {f=trata();f=funcao(f);}
+<AUT>[ ]+"and"(\n)  {f=trata();f=funcao(f);}
 <AUT>"\"""\,"     {f=trata();f=funcao(f);print();tmp=NULL;BEGIN INITIAL;}
 <AUT>"\}""\,"     {f=trata();f=funcao(f);print();tmp=NULL;BEGIN INITIAL;}
 <AUT>[ '-}] {inser(yytext); }  
