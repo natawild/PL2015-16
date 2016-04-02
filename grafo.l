@@ -72,6 +72,7 @@ void fechar() {
 <AUT>"\}"             {;}
 <AUT>"\,"[ ]+         {trata();}
 <AUT>[ ]+"and"[ ]+    {trata();}
+<AUT>[ ]+"and"(\n)    {trata();}
 <AUT>"\"""\,"         {trata();print();tmp=NULL;BEGIN INITIAL;}
 <AUT>"\}""\,"         {trata();print();tmp=NULL;BEGIN INITIAL;}
 <AUT>[A-Za-z]           {inser(yytext);}
