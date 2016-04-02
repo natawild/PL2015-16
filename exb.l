@@ -4,7 +4,6 @@ char  nomes[1000];
 int i=0;
 char *tmp;
 char *f;
-char *vigula;
 
 char * inser(char *texto) {
 nomes[i]=*texto;
@@ -14,10 +13,30 @@ return nomes;
 
 char* trata() {
       nomes[i]='\0';
-  
-  int n= strlen(nomes);
+ 
+   int variavel =1;
 
+  if(nomes[variavel]==' ') {
+   char kill[1000]; int o=0;
+   while(nomes[variavel]==' ') {variavel++;}
+   while(nomes[variavel]!='\0') {
+       kill[o]=nomes[variavel];
+       o++;
+      variavel++;
+}    kill[o]='\0';
+   o=0;
+   while(kill[o]!='\0') {
+       nomes[o]=kill[o];
+    o++;
+  }
+   
+ nomes[o]='\0';
+
+}
+
+  int n= strlen(nomes);
 int j=n-1;
+
 
 while(nomes[j]==' '){j--;}
 
@@ -95,6 +114,8 @@ strcat(h,tmp);
 int n=strlen(h);
 h[n]='}';
 n++;
+h[n++]=',';
+
 h[n]='\0';
 printf("%s",h);
 
@@ -115,7 +136,9 @@ printf("%s",h);
 
 "author = \""  {BEGIN (AUT);} 
 "author = \{"  {BEGIN (AUT);} 
-<AUT>"\}"  {inser(yytext); }  
+
+<AUT>"\}"  {inser(yytext); }
+<AUT>"\""  {inser(yytext); }
 <AUT>"\,"[ ]+  {f=trata();f=funcao(f);} 
 <AUT>[ ]+"and"[ ]+  {f=trata();f=funcao(f);}
 <AUT>[ ]+"and"(\n)  {f=trata();f=funcao(f);}
