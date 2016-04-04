@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.3.4)  4 APR 2016 20:20
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.3.4)  4 APR 2016 22:40
 entering extended mode
 **relprojLayout.tex
 (relprojLayout.tex
@@ -147,19 +147,19 @@ Cap\'{\i }tulo 5.
 Ap\^endice A.
 
 LaTeX Warning: Citation `citeulike:4677363' on page 7 undefined on input line 1
-72.
+70.
 
 
-LaTeX Warning: Citation `FCH11a' on page 7 undefined on input line 172.
+LaTeX Warning: Citation `FCH11a' on page 7 undefined on input line 170.
 
 
-Overfull \hbox (70.59532pt too wide) in paragraph at lines 190--190
+Overfull \hbox (70.59532pt too wide) in paragraph at lines 188--188
 []\OT1/cmtt/m/n/10 llll sanjdb c kjnjcnjnjj mmmmmmmmmmmmm hhhhhhhhhhhhhhhhhhhhh
 hhh jjjjjjjjjjjjjjjjjjjjjjjjjjjj kkkkkkkkkkkkkkkkkk[] 
  []
 
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <9> on input line 194.
+(Font)              <9> on input line 192.
 (plfiltrobase.l) (relprojLayout.bbl [7
 
 ]
@@ -192,7 +192,7 @@ cmr7.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr9.pfb><
 C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmss10.pfb><C:/Progr
 am Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Program Files
 /MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on relprojLayout.pdf (10 pages, 166309 bytes).
+Output written on relprojLayout.pdf (10 pages, 165975 bytes).
 PDF statistics:
  83 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
