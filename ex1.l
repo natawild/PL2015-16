@@ -72,5 +72,6 @@ int main(){
 	est = novo();
 	yylex();
 	print();
+	 free(est);
 	return 0;
 }
