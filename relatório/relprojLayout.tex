@@ -145,7 +145,7 @@ Os dados fornecidos são um ficheiro lp.bib, este que é um ficheiro com as caract
 Será necessário utilizar  
 
 \subsection{Alinea a)}
-Nesta alinea optou-se por utilizar 
+Nesta alinea optou-se por utilizar listas ligadas porque o nosso objetivo é armazenar as categorias das referências do \textit{BibTex}
 
 
 \section{Algoritmos}
@@ -158,19 +158,12 @@ Mostram-se a seguir alguns testes feitos (valores introduzidos) e
 os respectivos resultados obtidos:
 \subsection{Testes e Resultados alinea a)}
 
-\begin{verbatim}
-@book{
-@book{
-@cenas{
-@book{
-@coisas{
-@Book{
-@book{
-@BOOK{
+Utilizámos este ficheiro de teste para testar as diferentes opções que apareciam no ficheiro  
 
-\end{verbatim}
+\lstinputlisting{teste.bib}
 
 
+Mostrámos de seguida o ficheiro \textit{.html} produzido: 
 \begin{verbatim}
 proceeding -> 1
 mastersthesis -> 2
@@ -197,25 +190,11 @@ Trabalho futuro.
 \appendix
 \chapter{Código do Programa}
 
-Lista-se a seguir o código \java~\cite{citeulike:4677363} do programa \darius~\cite{FCH11a} que foi desenvolvido.
-\begin{verbatim}
-public class Aula()
-  {
-    int n, m;
-    int max(int a, int b)
-      {
-       ......
-       return(max);
-      }
-  }
-\end{verbatim}
+Lista-se a seguir o código \textit{flex} que foi desenvolvido: 
 
-\begin{verbatim}
-llll sanjdb c kjnjcnjnjj mmmmmmmmmmmmm hhhhhhhhhhhhhhhhhhhhhhhh jjjjjjjjjjjjjjjjjjjjjjjjjjjj kkkkkkkkkkkkkkkkkk
-      aqui deve aparecer o código do programa,
-      tal como está formato no ficheiro-fonte "darius.java"
-      caso indesejável $\varepsilon$
-\end{verbatim}
+\lstinputlisting{ex1.l}
+
+
 
 \begin{lstlisting}[caption={Exemplo de uma Listagem}, label={lstExe1}]
 llll sanjdb c kjnjcnjnjj mmmmmmmmmmmmm hhhhhhhhhhhhhhhhhhhhhhhh jjjjjjjjjjjjjjjjjjjjjjjjjjjj kkkkkkkkkkkkkkkkkk
