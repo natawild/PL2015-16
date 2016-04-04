@@ -142,10 +142,38 @@ Os dados fornecidos são um ficheiro lp.bib, este que é um ficheiro com as caract
 
 \chapter{Concepção/desenho da Resolução} \label{cdres}
 \section{Estruturas de Dados}
-Será necessário utilizar  
 
-\subsection{Alinea a)}
-Nesta alinea optou-se por utilizar listas ligadas porque o nosso objetivo é armazenar as categorias das referências do \textit{BibTex}
+Será necessário utilizar listas ligadas 
+
+\subsection{Algoritmo alinea a)}
+
+Nesta alinea optou-se por utilizar listas ligadas porque o nosso objetivo é armazenar as categorias das referências do \textit{BibTex}, estas que são strings e o objetivo é contá-las o que nos tornou a tarefa mais simples. 
+
+\begin{verbatim}
+void* procura(char* c){
+int flag = 1;
+
+Est* aux;
+aux = est;
+while(aux!=NULL && flag && aux->cat != NULL){
+if(!strcmp(minusculas(aux->cat), minusculas(c+1))){				
+aux->i++;
+flag=0;
+}
+aux=aux->next;
+}				
+
+if(flag){
+Est* novo = (Est*) malloc(sizeof(Est));
+novo->cat = strdup(c+1);
+novo->i = 1;
+novo->next = est;
+est = novo;
+}
+}
+\end{verbatim}
+
+
 
 
 
@@ -154,6 +182,10 @@ Nesta alinea optou-se por utilizar listas ligadas porque o nosso objetivo é arma
 \chapter{Codificação e Testes} \label{codtestes}
 
 \section{Alternativas, Decisões e Problemas de Implementação}
+
+
+
+
 \section{Testes realizados e Resultados}
 Mostram-se a seguir alguns testes feitos (valores introduzidos) e
 os respectivos resultados obtidos:
