@@ -1,9 +1,0 @@
-all: ex3
-
-lex.yy.c: ex3.l
-	lex ex3.l
-
-comp: main.c
-	gcc lex.yy.c -o ex3
-
-main.c: lex.yy.c

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.3.4)  5 APR 2016 23:16
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.3.4)  5 APR 2016 23:36
 entering extended mode
 **relprojLayout.tex
 (relprojLayout.tex
@@ -180,13 +180,13 @@ Cap\'{\i }tulo 3.
 
 ] [6]
 Cap\'{\i }tulo 4.
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 241.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 236.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\base\omscmr.fd"
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 241.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 236.
  [7
 
 ] [8] [9] (teste.bib
@@ -196,7 +196,7 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <9> not available
 File: grafoutput.png Graphic file (type png)
 
 <use grafoutput.png>
-Package pdftex.def Info: grafoutput.png used on input line 588.
+Package pdftex.def Info: grafoutput.png used on input line 583.
 (pdftex.def)             Requested size: 186.31935pt x 73.8502pt.
  [13 <./grafoutput.png>]
 Cap\'{\i }tulo 5.
@@ -238,7 +238,7 @@ C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Program
 iKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy9.pfb><C:/Program Files/MiKTeX 2.9
 /fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Program Files/MiKTeX 2.9/fonts/t
 ype1/public/amsfonts/cm/cmtt10.pfb>
-Output written on relprojLayout.pdf (23 pages, 250176 bytes).
+Output written on relprojLayout.pdf (23 pages, 251068 bytes).
 PDF statistics:
  130 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
