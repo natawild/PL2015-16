@@ -171,11 +171,13 @@ annote = "compilacao incremental, atributos, ambientes prog"
 \chapter{Concepção/desenho da Resolução} \label{cdres}
 \section{Estruturas de Dados}
 
-Será necessário utilizar listas ligadas 
 
 \subsection{Algoritmo alinea a)}
 
-Nesta alinea optou-se por utilizar listas ligadas porque o nosso objetivo é armazenar as categorias das referências do \textit{BibTex}, estas que são strings e o objetivo é contá-las o que nos tornou a tarefa mais simples. 
+Nesta alinea optou-se por utilizar listas ligadas porque
+vai guardando as categorias e o respetivo contador à medida que se encontra um padrão no ficheiro \textit{.bib}. 
+
+Decidimos que as categorias que se diferenciavam apenas nas letras maiúsculas ou minúsculas pertenceriam à mesma categoria. 
 
 \begin{verbatim}
 void* procura(char* c){
@@ -201,12 +203,27 @@ est = novo;
 }
 \end{verbatim}
 
-\subsection{Algoritmo alinea b)}
+\subsection{Algoritmo alinea b1)}
+
+Utilizámos dois arrays, um que guarda a informação que é lida, e outro que guarda a informação tratada. 
+
+\begin{verbatim}
+void trata() 
+\end{verbatim}
 
 
+
+\subsection{Algoritmo alínea b2)}
+
+Utilizamos arrays  
+strtoken para apanhar o que está entre chavetas ou aspas 
+strstr para cortar a string por autores 
 
 
 \subsection{Algoritmo alinea c)}
+
+Nesta alínea utilizámos arrays 
+
 
 
 
@@ -236,23 +253,42 @@ O restante texto é ignorado com a seguinte expressão:
 Esta alínea está dividida em duas partes. A primeira pede que sempre que um campo está entre aspas estas sejam trocadas por chavetas e o nome dos autores deverá apresentar o formato "N. Apelido". 
 
 
+Para apanhar o conteúdo do campo \textbf{author = }, este que pode iniciar-se com chaveta de abertura ou aspas, sugerimos os seguintes filtros: 
 
 
 \begin{verbatim}
-
 "author ="[ ]+"\""  {BEGIN (AUT);} 
 "author ="[ ]+"\{"  {BEGIN (AUT);} 
+\end{verbatim}
 
+Quando num autor se encontrar caracteres especiais no meio do nome tais como chavetas ou aspas, insere esses caracteres no array.
 
+\begin{verbatim}
 <AUT>"\}"  {inser(yytext); }
 <AUT>"\""  {inser(yytext); }
+\end{verbatim}
+
+
+Implementámos os filtros que nos permitem separar os nomes dos autores, estes que podem estra separados por vírgulas ou \textbf{and}. 
+\begin{verbatim}
 <AUT>"\,"[ ]+  {trata();funcao();} 
 <AUT>[ ]+"and"[ ]+  {trata();funcao();}
 <AUT>[ ]+"and"(\n)  {trata();funcao();}
-<AUT>"\"""\,"     {trata();funcao();print();tmp=NULL;BEGIN INITIAL;}
-<AUT>"\}""\,"     {trata();funcao();print();tmp=NULL;BEGIN INITIAL;}
-<AUT>[ '-}] {inser(yytext); }  
+\end{verbatim}
 
+
+Estes filtros permitem-nos determinar quando um autor termina, tanto com aspas seguida de vírgula ou chaveta seguida de vírgula. 
+\begin{verbatim}
+<AUT>"\"""\,"     {trata();funcao();print();tmp=NULL;BEGIN  INITIAL;}
+
+
+<AUT>"\}""\,"     {trata();funcao();print();tmp=NULL;BEGIN INITIAL;}
+\end{verbatim}
+
+
+Este filtro lê tudo o que está no à frente do campo autor: 
+\begin{verbatim}
+<AUT>[ '-}] {inser(yytext); }  
 \"[a-zA-Z] 	{printf("{%c", yytext[1]);}
 [a-zA-Z]\" 	{printf("%c}", yytext[0]);}
 \end{verbatim}
@@ -263,13 +299,25 @@ Nesta alínea é pedido que seja construido um grafo que mostre para dado autor to
 
 Para tal é necessário que seja feita a recolha de todos os nomes dos autores, depois para associá-los utiliza-se a expressão \textit{and} que nos indica quais os autores que teem publicações conjuntas. 
 
+
+Este filtro tal como o anterior serve para apanhar o conteúdo do campo \textbf{author = } para os dois casos possiveis no ficheiro \textit{.bf}. 
 \begin{verbatim}
 "author ="[ ]*"\""  {BEGIN (AUT);} 
 "author ="[ ]*"\{"  {BEGIN (AUT);} 
+\end{verbatim}
+
+
+\begin{verbatim}
 <AUT>"\}"             {;}
+\end{verbatim}
+
+\begin{verbatim}
+
 <AUT>"\,"[ ]+         {trata();}
 <AUT>[ ]+"and"[ ]+    {trata();}
 <AUT>[ ]+"and"(\n)    {trata();}
+
+
 <AUT>"\"""\,"         {trata();print();tmp=NULL;BEGIN INITIAL;}
 <AUT>"\}""\,"         {trata();print();tmp=NULL;BEGIN INITIAL;}
 <AUT>[A-Za-z]           {inser(yytext);}
@@ -277,11 +325,14 @@ Para tal é necessário que seja feita a recolha de todos os nomes dos autores, de
 
 
 \subsection{Makefile}
+O principal objetivo da Makefile é facilitar a compilação e execução do programa.
+Para isso criamos o seguinte ficheiro:
+
+
 
 
 \section{Testes realizados e Resultados}
-Mostram-se a seguir alguns testes feitos (valores introduzidos) e
-os respectivos resultados obtidos:
+Mostram-se a seguir alguns testes feitos e respectivos resultados obtidos:
 \subsection{Testes e Resultados alinea a)}
 
 Utilizámos este ficheiro de teste para testar as diferentes opções que apareciam no ficheiro  
@@ -313,9 +364,13 @@ string -> 31
 
 
 \chapter{Conclusão} \label{concl}
-Síntese do Documento.\\
-Estado final do projecto; Análise crítica dos resultados.\\
-Trabalho futuro.
+
+Na alínea a pressupusemos que as categorias com o mesmo nome e que se diferenciavam apenas em maiúsculas ou minusculas pertenciam à mesma categoria. Pois assim não estariamos a repetir informação. 
+
+
+A alinea c foi implementada pensando que o grafo seria criado com todos os autores. Porém após uma leitura mais atenta verificou-se que seria pedido que o utilizador escolhesse o autor e assim gerar o grafo com os autores que publicam diretamente com ele. 
+
+
 
 \appendix
 \chapter{Código do Programa}
@@ -332,14 +387,6 @@ Lista-se a seguir o código que foi desenvolvido para a alínea b:
 Lista-se a seguir o código que foi desenvolvido para a alínea c: 
 
 \lstinputlisting{grafo.l}
-
-
-\begin{lstlisting}[caption={Exemplo de uma Listagem}, label={lstExe1}]
-llll sanjdb c kjnjcnjnjj mmmmmmmmmmmmm hhhhhhhhhhhhhhhhhhhhhhhh jjjjjjjjjjjjjjjjjjjjjjjjjjjj kkkkkkkkkkkkkkkkkk
-      ou então aparecer aqui neste sítio um pouco de matematica $\$$
-      como alternativa ao anterior. 
-      e aqui mais um teste $\varepsilon$
-\end{lstlisting}
 
 
 \bibliographystyle{alpha}
