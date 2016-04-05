@@ -30,7 +30,7 @@ titu [Tt][Ii][Tt][lL][Ee]
 
 .+	{BEGIN INICIO;}
 
-<INICIO>.*[^@]@.*			{;}
+<INICIO>.*[^@]@.*			{ECHO;}
 <INICIO>"  "+				{;}
 <INICIO>[  ]+"\}"			{;}
 <INICIO>{auto}[ ]+"\=".*		{autor(yytext);}
