@@ -3,15 +3,15 @@
 char  nomes[1000];
 int i=0;
 char *tmp;
-char *f;
 
-char * inser(char *texto) {
+
+void inser(char *texto) {
 nomes[i]=*texto;
 i++;
-return nomes;
+
 }
 
-char* trata() {
+void trata() {
       nomes[i]='\0';
  
    int variavel =1;
@@ -57,16 +57,16 @@ while(nomes[j]!='\0') {
 
 nomes[k]='\0';
 i=0;
-return nomes;
+
 }
 else { 
 nomes[k]='\0';i=0;
-return nomes; }
+}
 
 
 }
 
-char* funcao(char *c) {
+void funcao() {
 
 if (tmp) { 
  
@@ -77,9 +77,9 @@ int j=0;
 tmp[n]=' ';
 n++;
 
-for (j=0;c[j]!='\0';j++) {
+for (j=0;nomes[j]!='\0';j++) {
 
-   tmp[n]=c[j];
+   tmp[n]=nomes[j];
    n++;
 
 }
@@ -92,18 +92,16 @@ i=0;
 int j=0;
 tmp=(char *)malloc(1000);
   
-   for(j=0;c[j]!='\0';j++) {
-             tmp[j]=c[j]; 
+   for(j=0;nomes[j]!='\0';j++) {
+             tmp[j]=nomes[j]; 
  
   }
          tmp[j]='\0';
 
 }
 
-return tmp;
 
 }
-
 
 
 void print() {
@@ -134,16 +132,17 @@ printf("%s",h);
 %%
 
 
-"author = \""  {BEGIN (AUT);} 
-"author = \{"  {BEGIN (AUT);} 
+"author ="[ ]+"\""  {BEGIN (AUT);} 
+"author ="[ ]+"\{"  {BEGIN (AUT);} 
+
 
 <AUT>"\}"  {inser(yytext); }
 <AUT>"\""  {inser(yytext); }
-<AUT>"\,"[ ]+  {f=trata();f=funcao(f);} 
-<AUT>[ ]+"and"[ ]+  {f=trata();f=funcao(f);}
-<AUT>[ ]+"and"(\n)  {f=trata();f=funcao(f);}
-<AUT>"\"""\,"     {f=trata();f=funcao(f);print();tmp=NULL;BEGIN INITIAL;}
-<AUT>"\}""\,"     {f=trata();f=funcao(f);print();tmp=NULL;BEGIN INITIAL;}
+<AUT>"\,"[ ]+  {trata();funcao();} 
+<AUT>[ ]+"and"[ ]+  {trata();funcao();}
+<AUT>[ ]+"and"(\n)  {trata();funcao();}
+<AUT>"\"""\,"     {trata();funcao();print();tmp=NULL;BEGIN INITIAL;}
+<AUT>"\}""\,"     {trata();funcao();print();tmp=NULL;BEGIN INITIAL;}
 <AUT>[ '-}] {inser(yytext); }  
 
 \"[a-zA-Z] 	{printf("{%c", yytext[1]);}
