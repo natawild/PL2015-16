@@ -67,8 +67,8 @@ void fechar() {
 
 %%
 
-"author = \""  {BEGIN (AUT);}
-"author = \{"  {BEGIN (AUT);}
+"author ="[ ]+"\""  {BEGIN (AUT);} 
+"author ="[ ]+"\{"  {BEGIN (AUT);} 
 <AUT>"\}"             {;}
 <AUT>"\,"[ ]+         {trata();}
 <AUT>[ ]+"and"[ ]+    {trata();}
