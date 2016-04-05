@@ -17,11 +17,11 @@
 \contentsline {subsubsection}{Al\IeC {\'\i }nea b1)}{7}
 \contentsline {subsubsection}{Al\IeC {\'\i }nea b2)}{8}
 \contentsline {subsubsection}{Al\IeC {\'\i }nea c)}{8}
-\contentsline {subsection}{\numberline {4.1.2}Makefile}{8}
-\contentsline {section}{\numberline {4.2}Testes realizados e Resultados}{8}
-\contentsline {subsection}{\numberline {4.2.1}Testes e Resultados alinea a)}{9}
-\contentsline {subsection}{\numberline {4.2.2} Resultados alinea b1)}{9}
-\contentsline {subsection}{\numberline {4.2.3} Resultados alinea b2)}{10}
-\contentsline {subsection}{\numberline {4.2.4}Testes e Resultados alinea c)}{10}
-\contentsline {chapter}{\numberline {5}Conclus\~ao}{11}
-\contentsline {chapter}{\numberline {A}C\'odigo do Programa}{12}
+\contentsline {subsection}{\numberline {4.1.2}Makefile}{9}
+\contentsline {section}{\numberline {4.2}Testes realizados e Resultados}{10}
+\contentsline {subsection}{\numberline {4.2.1}Testes e Resultados alinea a)}{10}
+\contentsline {subsection}{\numberline {4.2.2} Resultados alinea b1)}{11}
+\contentsline {subsection}{\numberline {4.2.3} Resultados alinea b2)}{11}
+\contentsline {subsection}{\numberline {4.2.4}Resultados alinea c)}{13}
+\contentsline {chapter}{\numberline {5}Conclus\~ao}{14}
+\contentsline {chapter}{\numberline {A}C\'odigo do Programa}{15}

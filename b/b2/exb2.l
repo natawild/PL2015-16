@@ -14,9 +14,8 @@ void autor(char* aut){
 			strncpy(nome, "\n", 1);		
 			nome = strstr(nomes, " and ");	
 		}
-		printf("%s", nomes);
 	}		
-	printf("%s", nomes);
+	printf("author = %s", nomes);
 }
 
 %}
