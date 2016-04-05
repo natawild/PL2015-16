@@ -132,8 +132,8 @@ printf("%s",h);
 %%
 
 
-"author ="[ ]+"\""  {BEGIN (AUT);} 
-"author ="[ ]+"\{"  {BEGIN (AUT);} 
+"author ="[ ]*"\""  {BEGIN (AUT);} 
+"author ="[ ]*"\{"  {BEGIN (AUT);} 
 
 
 <AUT>"\}"  {inser(yytext); }
