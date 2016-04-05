@@ -5,6 +5,7 @@
 \usepackage[portuges]{babel}
 %\usepackage[utf8]{inputenc}
 \usepackage[latin1]{inputenc}
+\usepackage{graphicx}
 
 \usepackage{url}
 %\usepackage{alltt}
@@ -76,7 +77,7 @@
 	
 Neste relatório será apresentado o desenvolvimento de um filtro de texto com a posterior aplicação sob um ficheiro BibTex, pretende-se que seja produzido um normalizador de ficheiros BibTex. 
 
-Implementou-se um filtro que permite fazer a contagem das categorias das referências bibliográficas, também foi implementado um filtro que permite a troca para chavetas do campo que está entre aspas. E ainda foi implementado um filtro que coloca os nomes dos autores escritos no formato "N. Apelido". Por fim, de modo a tornar a leitura mais fácil foi feita um ferramenta de \textit{pretty-printing}. 
+Implementou-se um filtro que permite fazer a contagem das categorias das referências bibliográficas, também foi implementado um filtro que permite a troca para chavetas do campo que está entre aspas. E ainda foi implementado um filtro que coloca os nomes dos autores escritos no formato "N. Apelido". Por fim, de modo a tornar a leitura mais fácil implementou-se um ferramenta de \textit{pretty-printing}. 
 
 Será também mostrado um grafo que ilustra para um dado autor (escolhido pelo utilizador) todos os autores que publicam normalmente com o autor em causa. Utilizou-se a linguagem \textit{Dot} do \textit{ GraphViz} esta, que gerou um ficheiro com um grafo de modo a que posteriormente fosse usada uma das ferramentas que processam \textit{Dot} para desenhar o dito grafo de associações de autores.
 
@@ -100,20 +101,15 @@ No capítulo \ref{ae} faz-se uma análise detalhada do problema proposto
 de modo a poder-se especificar  as entradas, resultados e formas de transformação.\\
 etc. \ldots\\
 
-No capítulo \ref{cdres} será feita uma descrição informal do problema com uma especificação dos requisitos. 
+No capítulo \ref{cdres} será feita a conceção e 
 No capítulo \ref{codtestes} pretende-se que
 No capítulo~\ref{concl} termina-se o relatório com uma síntese do que foi dito,
 as conclusões e o trabalho futuro
 
 \chapter{Análise e Especificação} \label{ae}
 \section{Descrição informal do problema}
-O BibTeX é uma ferramenta para a criação de  citações e referências bibliográficas em documentos LaTeX, ermite a importação de referências de outros programas como o Mendeley ou o EndNote.
 
-Estes gestores bibliográficos irão processar o ficheiro .bib (base de dados BibTeX) que será usado pelo LaTeX para inserir as citações e referências.
-
-O ficheiro (.bib) é  uma base de dados que contém os dados bibliográficos (autor, título, ano de publicação, etc.) das fontes citadas no documento LaTeX
-
-\textit{BibTex} é uma ferramenta de formatação usada em documentos \LaTeX. Foi criada em  1985 para facilitar a separação da bibliografia com a apresentação do texto, seguindo o mesmo conceito da distinção do conteúdo com o estilo do texto utilizada no próprio \LaTeX. 
+\textit{BibTex} é uma ferramenta de formatação usada em documentos \LaTeX, foi criada em  1985, para a criação de citações e referências bibliográficas em documentos \LaTeX, o ficheiro \textit{(.bib)} é  uma base de dados que contém os dados bibliográficos (autor, título, ano de publicação, etc.) das fontes citadas no documento \LaTeX. 
 
 Deixámos um exemplo de um ficheiro com a extensão \textit{.bib}: 
 
@@ -131,14 +127,43 @@ annote = "programacao oobjectos, proc comunicantes, espec formal"
 }
 \end{verbatim}
 
+O ficheiro BibTex contém várias categorias de referência estas inicializadas sempre pelo caracter $@$, deixamos aqui alguns exemplos de entradas que podem ser encontradas no ficheiro BibTex: 
+
+\begin{verbatim}
+@inbook
+@misc
+@incollection
+@inproceedings
+@techreport
+@unpublished
+\end{verbatim}
+
 \section{Especificação do Requisitos}
 \subsection{Dados}
-Os dados fornecidos são um ficheiro lp.bib, este que é um ficheiro com as caracteristicas de um ficheiro \textit{BibTex}. 
+Os dados fornecidos são um ficheiro \textit{.bib}, este que é um ficheiro com as caracteristicas de um ficheiro \textit{BibTex}. 
+
+Cada tipo de categoria tem os seus campos obrigatórios, neste acaso o objetivo de uma das tarefas será pesquisar através dos campo \textbf{author} o nome do autor e transformá-lo no formato "N. Apelido". 
+
+\begin{verbatim}
+@phdthesis{Mos75a,
+author = "P. D. Mosses",
+title = "Mathematical Semantics and Compiler Generation",
+year = 1975,
+school = "Oxford University",
+annote = "compilacao incremental, atributos, ambientes prog"
+}
+\end{verbatim}
 
 É também fornecido o nome de ferramentas de apoio à resolução do problema, neste caso o \textit{Graph Viz}, que permitirá colocar gráficamente a informação dos grafos criados, sendo que tornará as iterações entre os autores mais percetiveis. 
 
-\subsection{Pedidos}
-\subsection{Relações}
+
+\begin{figure}[<+htpb+>]
+	\centering
+	\includegraphics[scale=0.5]{grafoex}
+	\caption{Exemplo de geração de um grafo com os nomes dos autores com recurso à ferramenta }
+	\label{p1:fig:ae}
+\end{figure}
+
 
 \chapter{Concepção/desenho da Resolução} \label{cdres}
 \section{Estruturas de Dados}
@@ -175,15 +200,15 @@ est = novo;
 
 
 
-
-
-\section{Algoritmos}
-
 \chapter{Codificação e Testes} \label{codtestes}
 
 \section{Alternativas, Decisões e Problemas de Implementação}
 
 
+\subsection{Expressões Regulares}
+\subsubsection{Alinea a)}
+
+\subsection{Makefile}
 
 
 \section{Testes realizados e Resultados}
