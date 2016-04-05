@@ -98,20 +98,21 @@ Este trabalho envolverá o desenvolvimento de um normalizador de ficheiros \texti
 \section*{Estrutura do Relatório} \
 Este documentos está dividido em seis partes 
 No capítulo \ref{ae} faz-se uma análise detalhada do problema proposto
-de modo a poder-se especificar  as entradas, resultados e formas de transformação.\\
-etc. \ldots\\
+de modo a poder-se especificar  as entradas, resultados e formas de transformação do ficheiro \textit{.bib}. 
 
-No capítulo \ref{cdres} será feita a conceção e 
-No capítulo \ref{codtestes} pretende-se que
+No capítulo \ref{cdres} serão descritas as estruturas de dados implementadas para a realização do problema descrito. 
+No capítulo \ref{codtestes} serão mostradas as expressões regulares desenvolvidas para a implementação do caso de estudo, assim como os testes realizados e os resultados. 
 No capítulo~\ref{concl} termina-se o relatório com uma síntese do que foi dito,
-as conclusões e o trabalho futuro
+as conclusões e o trabalho futuro. No fim do documento estará incluido ficheiros anexos com o código desenvolvido. 
 
 \chapter{Análise e Especificação} \label{ae}
 \section{Descrição informal do problema}
 
-\textit{BibTex} é uma ferramenta de formatação usada em documentos \LaTeX, foi criada em  1985, para a criação de citações e referências bibliográficas em documentos \LaTeX, o ficheiro \textit{(.bib)} é  uma base de dados que contém os dados bibliográficos (autor, título, ano de publicação, etc.) das fontes citadas no documento \LaTeX. 
+O problema escolhido consiste na análise da ferramenta de formatação de citações e referências bibliográficas em documentos \LaTeX. 
 
-Deixámos um exemplo de um ficheiro com a extensão \textit{.bib}: 
+O \textit{BibTex} é uma ferramenta que foi criada em  1985 e utiliza um ficheiro \textit{(.bib)} este que é uma base de dados que contém os dados bibliográficos (autor, título, ano de publicação, etc.) das fontes citadas no documento \LaTeX. 
+
+Deixámos um exemplo de um excerto de um ficheiro com a extensão \textit{.bib}: 
 
 \begin{verbatim}
 @inbook{Val90a,
@@ -142,7 +143,9 @@ O ficheiro BibTex contém várias categorias de referência estas inicializadas sem
 \subsection{Dados}
 Os dados fornecidos são um ficheiro \textit{.bib}, este que é um ficheiro com as caracteristicas de um ficheiro \textit{BibTex}. 
 
-Cada tipo de categoria tem os seus campos obrigatórios, neste acaso o objetivo de uma das tarefas será pesquisar através dos campo \textbf{author} o nome do autor e transformá-lo no formato "N. Apelido". 
+Cada tipo de categoria tem os seus campos obrigatórios, neste acaso o objetivo de uma das tarefas será pesquisar através do campo \textbf{author = } o nome do autor e transformá-lo no formato "N. Apelido". 
+
+O nome da categoria é seguida por uma chaveta, e o primeiro campo será o nome para a referência a ser introduzida, os campos de cada categoria são separados por vírgula e a seguir ao campo aparecerá o simbolo igual (=), deixámos um exemplo da sintaxe da categoria \textbf{$@$phdthesis} e os respetivos campos presentes: 
 
 \begin{verbatim}
 @phdthesis{Mos75a,
@@ -160,7 +163,7 @@ annote = "compilacao incremental, atributos, ambientes prog"
 \begin{figure}[<+htpb+>]
 	\centering
 	\includegraphics[scale=0.5]{grafoex}
-	\caption{Exemplo de geração de um grafo com os nomes dos autores com recurso à ferramenta }
+	\caption{Exemplo de geração de um grafo com os nomes dos autores com recurso à ferramenta \textit{Graph Viz} }
 	\label{p1:fig:ae}
 \end{figure}
 
@@ -198,15 +201,80 @@ est = novo;
 }
 \end{verbatim}
 
+\subsection{Algoritmo alinea b)}
+
+
+
+
+\subsection{Algoritmo alinea c)}
+
 
 
 \chapter{Codificação e Testes} \label{codtestes}
 
 \section{Alternativas, Decisões e Problemas de Implementação}
 
-
 \subsection{Expressões Regulares}
+Para garantir que uma secção do código do ficheiro input ficassse protegida de todas as acções accionadas por outras expressões regulares declaramos o estado \%x. 
+
 \subsubsection{Alinea a)}
+
+Nesta alinea é pedido que se faça a contagem das categorias existentes, e no final se produza um ficheiro em formato HTML como o nome e as respetivas contagens. 
+
+Para a realização deste desafio é necesário procurar a categoria inicializada pelo caractere $@$ até encontrar a chaveta de abertura (\{). A categoria encontrada será inserida na estrutura através da função \textit{procura}, se a categoria já existir adiciona mais uma entrada ao contador, senão cria uma nova e insere-a na estrutura. Todas as categorias que obdecerem à expressão regular são capturadas com o \textit{yytext}. 
+
+\begin{verbatim}
+@[^{]*	{procura(yytext);}
+\end{verbatim}
+
+O restante texto é ignorado com a seguinte expressão: 
+\begin{verbatim}
+.|\n	{;}
+\end{verbatim}
+
+\subsubsection{Alínea b1)}
+Esta alínea está dividida em duas partes. A primeira pede que sempre que um campo está entre aspas estas sejam trocadas por chavetas e o nome dos autores deverá apresentar o formato "N. Apelido". 
+
+
+
+
+\begin{verbatim}
+
+"author ="[ ]+"\""  {BEGIN (AUT);} 
+"author ="[ ]+"\{"  {BEGIN (AUT);} 
+
+
+<AUT>"\}"  {inser(yytext); }
+<AUT>"\""  {inser(yytext); }
+<AUT>"\,"[ ]+  {trata();funcao();} 
+<AUT>[ ]+"and"[ ]+  {trata();funcao();}
+<AUT>[ ]+"and"(\n)  {trata();funcao();}
+<AUT>"\"""\,"     {trata();funcao();print();tmp=NULL;BEGIN INITIAL;}
+<AUT>"\}""\,"     {trata();funcao();print();tmp=NULL;BEGIN INITIAL;}
+<AUT>[ '-}] {inser(yytext); }  
+
+\"[a-zA-Z] 	{printf("{%c", yytext[1]);}
+[a-zA-Z]\" 	{printf("%c}", yytext[0]);}
+\end{verbatim}
+
+\subsubsection{Alínea c)}
+
+Nesta alínea é pedido que seja construido um grafo que mostre para dado autor todos os autores que publicam com ele. 
+
+Para tal é necessário que seja feita a recolha de todos os nomes dos autores, depois para associá-los utiliza-se a expressão \textit{and} que nos indica quais os autores que teem publicações conjuntas. 
+
+\begin{verbatim}
+"author ="[ ]*"\""  {BEGIN (AUT);} 
+"author ="[ ]*"\{"  {BEGIN (AUT);} 
+<AUT>"\}"             {;}
+<AUT>"\,"[ ]+         {trata();}
+<AUT>[ ]+"and"[ ]+    {trata();}
+<AUT>[ ]+"and"(\n)    {trata();}
+<AUT>"\"""\,"         {trata();print();tmp=NULL;BEGIN INITIAL;}
+<AUT>"\}""\,"         {trata();print();tmp=NULL;BEGIN INITIAL;}
+<AUT>[A-Za-z]           {inser(yytext);}
+\end{verbatim}
+
 
 \subsection{Makefile}
 
@@ -239,6 +307,10 @@ techreport -> 140
 string -> 31
 \end{verbatim}
 
+\subsection{Testes e Resultados alinea b)}
+
+\subsection{Testes e Resultados alinea c)}
+
 
 \chapter{Conclusão} \label{concl}
 Síntese do Documento.\\
@@ -248,10 +320,18 @@ Trabalho futuro.
 \appendix
 \chapter{Código do Programa}
 
-Lista-se a seguir o código \textit{flex} que foi desenvolvido: 
+Lista-se a seguir o código que foi desenvolvido para a alínea a: 
 
 \lstinputlisting{ex1.l}
 
+
+Lista-se a seguir o código que foi desenvolvido para a alínea b: 
+
+\lstinputlisting{exb.l}
+
+Lista-se a seguir o código que foi desenvolvido para a alínea c: 
+
+\lstinputlisting{grafo.l}
 
 
 \begin{lstlisting}[caption={Exemplo de uma Listagem}, label={lstExe1}]
@@ -261,8 +341,6 @@ llll sanjdb c kjnjcnjnjj mmmmmmmmmmmmm hhhhhhhhhhhhhhhhhhhhhhhh jjjjjjjjjjjjjjjj
       e aqui mais um teste $\varepsilon$
 \end{lstlisting}
 
-É ainda possível importar diretamente o ficheiro:
-\lstinputlisting{plfiltrobase.l} %input de um ficheiro
 
 \bibliographystyle{alpha}
 \bibliography{../Bibs/lp,prh}

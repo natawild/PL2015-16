@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.3.4)  5 APR 2016 12:28
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.3.4)  5 APR 2016 16:53
 entering extended mode
 **relprojLayout.tex
 (relprojLayout.tex
@@ -163,11 +163,6 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 
 ]
 Cap\'{\i }tulo 1.
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--103
-
- []
-
 [2
 
 ]
@@ -177,7 +172,7 @@ Cap\'{\i }tulo 2.
 ] <grafoex.png, id=25, 259.7203pt x 424.58624pt>
 File: grafoex.png Graphic file (type png)
  <use grafoex.png>
-Package pdftex.def Info: grafoex.png used on input line 162.
+Package pdftex.def Info: grafoex.png used on input line 165.
 (pdftex.def)             Requested size: 129.85983pt x 212.2926pt.
  [4 <./grafoex.png>]
 Cap\'{\i }tulo 3.
@@ -185,19 +180,22 @@ Cap\'{\i }tulo 3.
 
 ]
 Cap\'{\i }tulo 4.
-(teste.bib
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 1.
- ("C:\Program Files\MiKTeX 2.9\tex\latex\base\omscmr.fd"
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 224.
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\base\omscmr.fd"
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 224.
+ [6
+
+] (teste.bib
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <9> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 1.
-) [6
-
-]
-[7]
+)
+[7] [8]
 Cap\'{\i }tulo 5.
-[8
+[9
 
 ]
 Ap\^endice A.
@@ -210,24 +208,24 @@ File: omlcmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <9> not available
 (Font)              Font shape `OML/cmm/m/it' tried instead on input line 13.
- [9
+ [10
 
-])
-(plfiltrobase.l) (relprojLayout.bbl [10]
+]) (exb.l
+[11] [12] [13]) (grafo.l [14]) [15] (relprojLayout.bbl [16]
 
 LaTeX Warning: Empty `thebibliography' environment on input line 3.
 
-) [11
+) [17
 
 ] (relprojLayout.aux) ) 
 Here is how much of TeX's memory you used:
- 3434 strings out of 493698
- 44922 string characters out of 3144375
- 175199 words of memory out of 3000000
+ 3437 strings out of 493698
+ 44912 string characters out of 3144375
+ 194199 words of memory out of 3000000
  6734 multiletter control sequences out of 15000+200000
  11455 words of font info for 40 fonts, out of 3000000 for 9000
  1025 hyphenation exceptions out of 8191
- 30i,7n,32p,446b,1598s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 30i,7n,32p,520b,1614s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts
 /cm/cmbx10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx
 12.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi9.pfb><C
@@ -237,11 +235,12 @@ KTeX 2.9/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Program Files/MiKTeX 2.9/
 fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Program Files/MiKTeX 2.9/fonts/type
 1/public/amsfonts/cm/cmr7.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/a
 msfonts/cm/cmr9.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm
-/cmsy9.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti10.p
-fb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on relprojLayout.pdf (13 pages, 229898 bytes).
+/cmsy10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy9.p
+fb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/P
+rogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on relprojLayout.pdf (19 pages, 253347 bytes).
 PDF statistics:
- 96 PDF objects out of 1000 (max. 8388607)
+ 119 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  6 words of extra memory for PDF output out of 10000 (max. 10000000)
 
