@@ -21,7 +21,7 @@ void autor(char* aut){
 %}
 
 auto [Aa][Uu][Tt][Hh][Oo][Rr]
-titu [Tt][Ii][Tt][lL][Ee]
+
 
 %x INICIO
 
