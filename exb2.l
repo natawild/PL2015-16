@@ -146,11 +146,8 @@ void autor(char* aut){
 auto [Aa][Uu][Tt][Hh][Oo][Rr]
 titu [Tt][Ii][Tt][lL][Ee]
 
-%x AUT
-%x TITLE
 %x INICIO
-%x ALL
-%x IN
+
 %%
 
 .+	{BEGIN INICIO;}
@@ -163,46 +160,6 @@ titu [Tt][Ii][Tt][lL][Ee]
 
 
 
-%{
-/*
-<INICIO>"\}"				{BEGIN INITIAL;imprime(yytext);}
-<INICIO>[ ]+{titu}[ ]+"\="[ ]+        {BEGIN (TITLE);imprime(yytext);}
-<INICIO>[ ]+{auto}[ ]+"\="[ ]+        {BEGIN (AUT);}
-<INICIO>[ ]+[A-Za-z]+[ ]+"\="[ ]+      {BEGIN (ALL);imprime(yytext);}
-<INICIO>[ ]+.+[ ]+"\="[ ]+             {BEGIN (ALL);imprime(yytext);}
-
-<AUT>"\}"           {inser(yytext);} 
-<AUT>"\""           {inser(yytext); }
-<AUT>"\,"[ ]+       {trata();} 
-<AUT>[ ]+"and"[ ]+  {trata();}
-<AUT>[ ]+"and"(\n)  {trata();}
-<AUT>"\"""\,"       {trata();final(yytext);print();tmp=NULL;BEGIN INICIO;}
-<AUT>"\}""\,"       {trata();final(yytext);print();tmp=NULL;BEGIN INICIO;}
-<AUT>[ '-}]         {inser(yytext);} 
-
-
-
-<TITLE>"\}"           {inser(yytext);}  
-<TITLE>[ ]+           {trataResto();} 
-<TITLE>"\"""\,"       {trataResto();final(yytext);printResto();tmp=NULL;BEGIN INICIO;}
-<TITLE>"\}""\,"       {trataResto();final(yytext);printResto();tmp=NULL;BEGIN INICIO;}
-<TITLE>['-~]         {inser(yytext);} 
-
-<ALL>"&"            {inser(yytext);}
-<ALL>"\{"           {inser(yytext);}
-<ALL>"\""(\n)       {trataResto();final(yytext);printExcep();tmp=NULL;BEGIN INICIO;}
-<ALL>"\,"           {trataResto();printResto();tmp=NULL;BEGIN INICIO;}
-<ALL>[ ]+           {trataResto();}
-<ALL>"\}"           {inser(yytext);}
-<ALL>"\}"[ ]+       {trataResto();final(yytext);printResto();tmp=NULL;BEGIN INICIO;}
-<ALL>"\}"(\n)       {trataResto();final(yytext);printResto();tmp=NULL;BEGIN INICIO;}
-<ALL>"\"""\,"       {trataResto();final(yytext);printResto();tmp=NULL;BEGIN INICIO;}
-<ALL>"\}""\,"       {trataResto();final(yytext);printResto();tmp=NULL;BEGIN INICIO;}
-<ALL>"\""[ ]+       {trataResto();final(yytext);printFinal();tmp=NULL;BEGIN INICIO;}
-<ALL>[ ]+[1-9]+     {inser(yytext);}
-<ALL>['-~]          {inser(yytext);}
-*/
-%}
 
 %%
 
