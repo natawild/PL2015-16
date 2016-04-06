@@ -151,6 +151,7 @@ int main(int argc, char* argv[]){
     yylex();
 
     fechar(); 
+       free(guarda);
 }
 
  else {printf("Indtroduza o nome\n");}
