@@ -49,6 +49,9 @@ i=0;
 
 
 
+
+
+
 void inser(char *texto) {
    nomes[i]=*texto;
     i++;
@@ -62,7 +65,7 @@ int flag=0;
 Lista aux=guarda;     
 
  while(aux!=NULL && !flag) {
-   
+
     if((n=strcmp(aux->tmp,autor))==0) {
      flag =1;
 
@@ -72,14 +75,21 @@ Lista aux=guarda;
 }
 
    if(flag) {
-
+      
       while(guarda->next!=NULL){
+       fprintf(fp,"\"");
+
        fprintf(fp,"%s",guarda->tmp);
+
+       fprintf(fp,"\"");
+
        fprintf(fp,"%s","--");
+
       guarda=guarda->next;  
 
-    }
+    }    fprintf(fp,"\"");
          fprintf(fp,"%s",guarda->tmp);
+         fprintf(fp,"\"");
          fprintf(fp,"\n");
              }    
   
@@ -105,14 +115,18 @@ void fechar() {
 
 
 
+
+
 %}
 
 %x AUT
 
 
+
 %%
 "author ="[ ]*"\""  {BEGIN (AUT);} 
-"author ="[ ]*"\{"  {BEGIN (AUT);} 
+"author ="[ ]*"\{"  {BEGIN (AUT);}
+<AUT>"\."         {inser(yytext);}
 <AUT>[ ]+            {;}
 <AUT>"\}"             {;}
 <AUT>"\,"[ ]+         {trata();}
@@ -127,7 +141,6 @@ void fechar() {
 
 
 int yywrap() {return 1;}
-
 int main(int argc, char* argv[]){
     if (argc ==2) {
 
