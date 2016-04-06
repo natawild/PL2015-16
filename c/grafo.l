@@ -150,7 +150,8 @@ int main(int argc, char* argv[]){
    guarda=NULL;
     yylex();
 
-    fechar(); 
+    fechar();
+   free(guarda);
 }
 
  else {printf("Indtroduza o nome\n");}
