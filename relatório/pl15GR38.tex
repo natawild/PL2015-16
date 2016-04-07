@@ -416,9 +416,6 @@ main.c: lex.yy.c
 
 
 
-
-
-
 \section{Testes realizados e Resultados}
 Mostram-se a seguir alguns testes feitos e respectivos resultados obtidos:
 \subsection{Testes e Resultados alinea a)}
@@ -576,11 +573,19 @@ annote = "atributos, compilacao incremental"
 
 
 \subsection{Resultados alinea c)}
-Nesta alínea  temos a geração de um grafo com o nome do autor inserido pelo utilizador. Obtivemos o resultado de todos os autores que publicam normalmente com o autor \textbf{JosJooAlmeida}. 
+Nesta alínea é construido um grafo que mostra para um dado autor escolhido pelo utilizador os autores com quem ele normalmente publica. O resultado da aplicação do algoritmo foi colocado num ficheiro \textit{.dot} e executámos o seguinte comando para gerar um ficheiro de imagem: 
+
+\begin{verbatim}
+dot -Tpng ficheiro.dot -o ficheiro.png
+\end{verbatim}
+
+
+
+ Mostrámos de seguida um exemplo de um grafo. 
 
 \begin{figure}[<+htpb+>]
 	\centering
-	\includegraphics[scale=0.7]{grafoutput}
+	\includegraphics[scale=0.2]{grafoutput}
 	\caption{Exemplo de geração de um grafo com os nomes dos autores com recurso à ferramenta \textit{Graph Viz} }
 	\label{p1:fig:graph}
 \end{figure}
@@ -593,9 +598,11 @@ Após a conclusão deste trabalho verificámos que não cumprimos todos os objetivos
 
 Na alínea a pressupusemos que as categorias com o mesmo nome e que se diferenciavam apenas em maiúsculas ou minusculas pertenciam à mesma categoria. Pois assim não estariamos a repetir informação. 
 
-Na alinea b2 não conseguimos colocar no início os campos autor e título. 
+Na alínea b1 tratamos os nomes dos autores de modo a que ficassem com o formato \textbf{N.Apelido}, utilizando arrays. 
 
-A alinea c foi implementada pensando que o grafo seria criado com todos os autores. Porém após uma leitura mais atenta verificou-se que seria pedido que o utilizador escolhesse o autor e assim gerar o grafo com os autores que publicam diretamente com ele. 
+Na alinea b2 não conseguimos colocar no início das categorias os campos autor e título. 
+
+Na alinea c foi implementado que o utilizador escolhesse o autor e assim gerar o grafo com os autores que publicam diretamente com ele. Um aspeto a ser melhorado poderia ser em vez de aparecerem as várias linhas que correspondem ao número de publicações conjuntas colocar apenas uma com a contagem. 
 
 Como trabalho futuro pretende-se melhorar os algoritmos que permitam um melhor funcionamento dos filtros. 
 
