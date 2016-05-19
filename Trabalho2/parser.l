@@ -4,7 +4,6 @@
 %}
 
 
-
 %%
 
 int         {return(INT);}
@@ -39,11 +38,13 @@ do          {return(DO);}
 \#          {return('#');}
 \|			{return('|');}			
 \&			{return('&');}
-[a-zA-Z]+  	{yylval.var_name = strdup(yytext); return(var);}
-[0-9]+     	{yylval.value = atoi(yytext); return(num);}
+[a-zA-Z]+  	{yylval.var_nome = strdup(yytext); return(var);}
+[0-9]+     	{yylval.valor = atoi(yytext); return(num);}
+\/\/.* 		{ ; } 
 
 
 %%
 
-int yywrap()
-{ return(1); }
+int yywrap(){ 
+	return(1); 
+	}
