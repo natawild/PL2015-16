@@ -2,10 +2,8 @@
 
 #include <stdio.h>
 
-int ccLine =0; 
 
 %}
-
 
 
 %union{
@@ -21,7 +19,7 @@ int ccLine =0;
 }
 
 
-%token INT WHILE FOR IF ELSE RETURN VOID PRINTI SCANI TRUE FALSE DO END
+%token INT WHILE FOR IF ELSE RETURN VOID PRINTI SCANI TRUE FALSE DO 
 %token var num
 
 %type <var_nome> var
@@ -197,3 +195,4 @@ int main(){
 	yyparse();
 	return 0; 
 }
+
