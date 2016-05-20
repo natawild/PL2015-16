@@ -52,14 +52,13 @@ extern int yydebug;
     ELSE = 262,
     RETURN = 263,
     VOID = 264,
-    PRINTI = 265,
-    SCANI = 266,
+    PRINT = 265,
+    SCAN = 266,
     TRUE = 267,
     FALSE = 268,
     DO = 269,
-    END = 270,
-    var = 271,
-    num = 272
+    num = 270,
+    id = 271
   };
 #endif
 /* Tokens.  */
@@ -70,21 +69,20 @@ extern int yydebug;
 #define ELSE 262
 #define RETURN 263
 #define VOID 264
-#define PRINTI 265
-#define SCANI 266
+#define PRINT 265
+#define SCAN 266
 #define TRUE 267
 #define FALSE 268
 #define DO 269
-#define END 270
-#define var 271
-#define num 272
+#define num 270
+#define id 271
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 11 "gramatica.y" /* yacc.c:1909  */
+#line 9 "gramatica.y" /* yacc.c:1909  */
 
     char* var_nome;
     int valor;
@@ -96,7 +94,7 @@ union YYSTYPE
         int size;
     } varAtr;   
 
-#line 100 "y.tab.h" /* yacc.c:1909  */
+#line 98 "y.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

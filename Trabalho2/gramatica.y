@@ -19,14 +19,14 @@
 }
 
 
-%token INT WHILE FOR IF ELSE RETURN VOID PRINTI SCANI TRUE FALSE DO 
-%token var num
+%token INT WHILE FOR IF ELSE RETURN VOID PRINT SCAN TRUE FALSE DO 
+%token <valor>num 
+%token <var_nome>id 
 
-%type <var_nome> var
-%type <valor> num
-%type <varAtr> VarAtr
+/*
+%type <varAtr> Var
 %type <varAtr> Atrib
-%type <type> Tipo
+*/
 
 
 // --------------------PROGRAMA ------------------------------------
@@ -56,25 +56,33 @@ ListInst    : Inst
 /** A declaração de funções é precedida pelo símbolo terminal '\#'. 
  */
 
-Funcao      : '#' Tipo var '(' ListaArg ')' '{' ListaDecla ListInst '}'              
+Funcao      : '#' TipoFun IdFun '(' ListaArg ')' '{' ListaDecla ListInst '}'              
             ;
 
+IdFun 		: id 
+			;
 
 ListaArg    :   
             | ListaArg2 ;
 
-ListaArg2   : Tipo var                            
-            | ListaArg2  ','  Tipo var         
+ListaArg2   : Tipo Var                            
+            | ListaArg2  ','  Tipo Var         
             ;
+
+Tipo 		: INT
+			; 
+
 
 
 // --------------------DECLARACAO ------------------------------------
 
-Decla       : INT var ';'                      
-            | INT var '[' num ']' ';'        
+Decla       : INT Var ';'                      
+            | INT Var '[' num ']' ';'
+            | INT Var '[' num ']' '[' num ']' ';'         
             ;
+Var : id  ;
 
-Tipo        : VOID                             
+TipoFun     : VOID                             
             | INT                           
             ;               
 
@@ -89,29 +97,27 @@ Inst        : If
             | DoWhile
             | For                                       
             | Atrib ';'                                 
-            | Printi';'                                 
-            | Scani ';'                                 
+            | Print';'                                 
+            | Scan ';'                                 
             | RETURN Exp ';'                               
             ;
 
 
-VarAtr      : var                                    
-            ;
-
 
 // ------------------------------------ ATRIBUIÇAO ------------------------------------
 
-Atrib       : VarAtr '=' Exp                                                                                      
-            | VarAtr '+''+'                                                                                       
-            | VarAtr '[' Exp ']' '=' Exp                        
+Atrib       : Var '=' Exp                                                                                      
+            | Var '+''+'                                                                                       
+            | Var'[' Exp ']' '=' Exp  
+            | Var'[' Exp ']' '[' Exp ']' '=' Exp  
             ;
 
 // ------------------------------------ PRINT SCAN ------------------------------------
 
-Printi:     PRINTI '(' Exp ')'                          
+Print:     PRINT '(' Exp ')'                          
             ;
 
-Scani:      SCANI '(' VarAtr ')'                        
+Scan:      SCAN '(' Var')'                        
             ;
 // ------------------------------------ IF THEN ELSE ------------------------------------
 
@@ -141,24 +147,39 @@ ForHeader   :  '(' ForAtrib ';' ExpL ';' ForAtrib ')'
             ;  
 
 
-ForAtrib    :   
-            |Atrib  
+ForAtrib    : Atrib  
             ;
 
 // -----------------------------------------------------------------CALCULO DE EXPRESSOES -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ExpL 		: Exp 
+			|Exp '=''=' Exp
+			|Exp '!''=' Exp
+			|Exp '>''=' Exp
+			|Exp '<''=' Exp
+			|Exp '<' Exp
+			|Exp '>' Exp
 
-Exp         : Exp '+' Exp                        
-            | Exp '-' Exp                      
-            | Exp '%' Exp                       
-            | Exp '*' Exp                       
-            | Exp '/' Exp                       
-            | '(' Exp ')'                       
-            | num                               
-            | VarAtr                                                 
-            | VarAtr                                       
-            | var '(' FunArgs')'                  
-            ;
 
+Exp 		: Termo
+			|Exp '+' Termo 
+			|Exp  '-' Termo 
+			|Exp '|''|' Termo 
+			; 
+
+
+Termo		: Fun
+			| Termo '/' Fun
+			| Termo '*' Fun
+			| Termo  '&''&' Fun
+			; 
+
+Fun 	   	: num                       
+            | Var                              
+            | Var '['Exp ']'                                           
+            | Var  '['Exp ']' '['Exp ']'                                      
+            | IdFun '(' FunArgs')' 
+            | '(' Exp ')'                  
+            ;                                  
 
 FunArgs     :    
             | FunArgs2 
@@ -171,15 +192,6 @@ FunArgs2    : Exp
 TestExpL    : '(' ExpL ')'                                        
             ;
 
-ExpL        : Exp '=''=' Exp                       
-            | Exp '!''=' Exp                       
-            | Exp '>''=' Exp                      
-            | Exp '<''=' Exp                       
-            | Exp '<' Exp                          
-            | Exp '>' Exp                          
-            | '(' ExpL ')' '&' '&' '(' ExpL ')'                    
-            | '(' ExpL ')' '|''|' '(' ExpL ')'   
-            ;   
 
 %%
 

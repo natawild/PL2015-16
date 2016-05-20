@@ -13,8 +13,8 @@ if          {return(IF);}
 else        {return(ELSE);}
 return      {return(RETURN);}
 void        {return(VOID);}
-printi      {return(PRINTI);}
-scani       {return(SCANI);}
+print     	{return(PRINT);}
+scan     	{return(SCAN);}
 true        {return(TRUE);}
 false       {return(FALSE);}
 do          {return(DO);}
@@ -38,7 +38,7 @@ do          {return(DO);}
 \#          {return('#');}
 \|			{return('|');}			
 \&			{return('&');}
-[a-zA-Z]+  	{yylval.var_nome = strdup(yytext); return(var);}
+[a-zA-Z]+  	{yylval.var_nome = strdup(yytext); return(id);}
 [0-9]+     	{yylval.valor = atoi(yytext); return(num);}
 \/\/.* 		{ ; } 
 
