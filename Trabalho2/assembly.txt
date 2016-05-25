@@ -1,0 +1,4 @@
+START
+JUMP inicio
+inicio:NOP
+STOP

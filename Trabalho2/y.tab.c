@@ -64,9 +64,9 @@
 /* Copy the first part of user declarations.  */
 #line 1 "gramatica.y" /* yacc.c:339  */
  
-
 #include <stdio.h>
 #include "stack.h"
+#include <stdlib.h>
 
 extern ccLine;
 static int total;
@@ -1618,7 +1618,10 @@ yyreturn:
 #line 202 "gramatica.y" /* yacc.c:1906  */
 
 
+
 #include "lex.yy.c"
+
+
 
 /*
 int yyerror(char* s) {
@@ -1627,13 +1630,14 @@ int yyerror(char* s) {
 }
 */
 
-/*
 
 int yyerror(char *s) {
 	fprintf(stderr, "Erro na linha ( %d! ) %s\n", yylineno, s);
 	return 0;
 }
-*/
+
+
+/*
 
 int  yyerror(char *s){
     fprintf(stderr,"ERRO: Syntax LINHA: %d MSG: %s\n",ccLine,s);
@@ -1641,16 +1645,34 @@ int  yyerror(char *s){
     return 0; 
 }
 
+*/
+
+/*
+
 void inicio()
 {
     s = initStack();
     total = 0;
     f = fopen("assembly.out", "w");
 }
+*/
+
+
+int main(int argc, char* argv[]){
+
+	f=fopen("assembly.txt","w+");
+		yyparse();
+		return 0; 
+	}
+
+
+
+/*
 
 int main(){
 	
 	yyparse();
 	return 0; 
 }
+*/
 
