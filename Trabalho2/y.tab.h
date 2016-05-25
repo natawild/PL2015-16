@@ -78,7 +78,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 15 "gramatica.y" /* yacc.c:1909  */
+#line 21 "gramatica.y" /* yacc.c:1909  */
 
     char* var_nome;
     int valor;

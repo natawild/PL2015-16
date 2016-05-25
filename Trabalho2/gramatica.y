@@ -2,11 +2,17 @@
 #include <stdio.h>
 #include "stack.h"
 #include <stdlib.h>
+#include "y.tab.h"
+	
+
 
 extern ccLine;
 static int total;
 FILE *f;
 static Stack s;
+
+int vars; 
+int lvars; 
 
 
 %}
@@ -41,11 +47,11 @@ Um programa é uma lista de declarações, lista de Funcões , e uma lista de In
 
 %%
 
-Prog        : 					{fprintf(f,"START\n");}
-			ListaDecla  	 	{fprintf(f,"JUMP inicio\n");}
-			ListaFun 			{fprintf(f,"inicio:NOP\n");}
-			ListInst    		{fprintf(f,"STOP\n");}                                                                    
-            ;
+Prog        : ListaDecla  	 	{fprintf(f,"START\n");}
+			ListaFun 			{fprintf(f,"JUMP inicio\n");}		
+			ListInst    		{fprintf(f,"inicio:NOP\n");}                                                               
+                   				{fprintf(f,"STOP\n");}  
+            ; 
 
 ListaDecla  :                            
             | ListaDecla Decla 
@@ -66,7 +72,7 @@ ListInst    : Inst
 Funcao      : '#' TipoFun IdFun '(' ListaArg ')' '{' ListaDecla ListInst '}'              
             ;
 
-TipoFun     : VOID                             
+TipoFun     : VOID      	                     
             | INT                           
             ;  
 
@@ -86,13 +92,14 @@ Tipo 		: INT
 
 // --------------------DECLARACAO ------------------------------------
 
-Decla       : INT Var ';'                      
+Decla       : INT Var ';'   {fprintf(f,"PUSHI 0\n"); vars++; }   			                
             | INT Var '[' num ']' ';'
             | INT Var '[' num ']' '[' num ']' ';'         
             ;
-Var : id  ;
 
-             
+
+Var 		: id  
+			;
 
 // --------------------INSTRUCAO ------------------------------------
 
@@ -120,14 +127,17 @@ Atrib       : Var '=' Exp
 
 // ------------------------------------ PRINT SCAN ------------------------------------
 
-Print:     PRINT '(' Exp ')'  		{fprintf(f,"WRITEI\n");}                        
+Print:     PRINT '(' Exp ')'  		//{fprintf(f,"\tpushs \" %s\" \n\twrites\n",$3);}                        
             ;
 
-Scan:      SCAN '(' Var')'                        
+Scan:      SCAN '(' Var')'   		//{fprintf(f,"\tread %s\n\tatoi\n\tstoreg %d",$1,lvars);lvars++; }                                 
             ;
 // ------------------------------------ IF THEN ELSE ------------------------------------
 
-If          :  IF TestExpLog ConjInst  Else
+If          :  IF 
+			TestExpLog   	{fprintf(f,"JZ endCond%d\n", get(s));}
+			ConjInst  		 {fprintf(f," endCo%d\n", pop(s));}	
+			Else
             ;
 
 Else        :       
@@ -157,30 +167,30 @@ ForAtrib    : Atrib
 
 // -----------------------------------------------------------------CALCULO DE EXPRESSOES -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ExpLog 		: Exp 
-			|Exp '=''=' Exp
+			|Exp '=''=' Exp 		{fprintf(f,"equal\n");}
 			|Exp '!''=' Exp
-			|Exp '>''=' Exp
-			|Exp '<''=' Exp
-			|Exp '<' Exp
-			|Exp '>' Exp
+			|Exp '>''=' Exp 		{fprintf(f,"supeq\n");}
+			|Exp '<''=' Exp 		{fprintf(f,"infeq\n");}
+			|Exp '<' Exp 			{fprintf(f,"inf\n");}
+			|Exp '>' Exp 			{fprintf(f,"sup\n");}
 			; 
 
 
 Exp 		: Termo
-			|Exp '+' Termo 
-			|Exp  '-' Termo 
+			|Exp '+' Termo  			{fprintf(f,"add\n");}
+			|Exp  '-' Termo 			{fprintf(f,"sub\n");}
 			|Exp '|''|' ExpLog 
 			; 
 
 
 Termo		: Fun
-			| Termo '/' Fun
-			| Termo '*' Fun
+			| Termo '/' Fun 			{fprintf(f,"div\n");}
+			| Termo '*' Fun 			{fprintf(f,"mul\n");}
 			| Termo '&''&' ExpLog
 			; 
 
-Fun 	   	: num                       
-            | Var                              
+Fun 	   	: num                       {fprintf(f,"%d", $1);}     
+            | Var  											                         
             | Var '['Exp ']'                                           
             | Var  '['Exp ']' '['Exp ']'                                      
             | IdFun '(' FunArgs')' 
@@ -242,7 +252,9 @@ void inicio()
 
 
 int main(int argc, char* argv[]){
-
+	vars=0; 
+	lvars=0; 
+  s=initStack();
 	f=fopen("assembly.txt","w+");
 		yyparse();
 		fclose(f); 

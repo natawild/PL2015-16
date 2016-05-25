@@ -1,4 +1,14 @@
+PUSHI 0
+PUSHI 0
+PUSHI 0
+PUSHI 0
 START
 JUMP inicio
+inf
+JZ endCond0
+ endCo0
+inf
+JZ endCond0
+ endCo0
 inicio:NOP
 STOP
