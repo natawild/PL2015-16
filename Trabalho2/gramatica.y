@@ -245,6 +245,7 @@ int main(int argc, char* argv[]){
 
 	f=fopen("assembly.txt","w+");
 		yyparse();
+		fclose(f); 
 		return 0; 
 	}
 
