@@ -10,5 +10,5 @@ y.tab.c: gramatica.y
 			yacc -d gramatica.y
 
 clean: 
-	rm *.o lex.yy.c y.tab.c y.tab.h 
+	rm  lex.yy.c y.tab.c y.tab.h gramatica
 

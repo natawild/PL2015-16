@@ -15,8 +15,6 @@ return      {return(RETURN);}
 void        {return(VOID);}
 print     	{return(PRINT);}
 scan     	{return(SCAN);}
-true        {return(TRUE);}
-false       {return(FALSE);}
 do          {return(DO);}
 \=	 		{return('=');}
 \.        	{return('.');}

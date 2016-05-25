@@ -1,6 +1,12 @@
 %{ 
 
 #include <stdio.h>
+#include "stack.h"
+
+extern ccLine;
+static int total;
+FILE *f;
+static Stack s;
 
 
 %}
@@ -19,7 +25,7 @@
 }
 
 
-%token INT WHILE FOR IF ELSE RETURN VOID PRINT SCAN TRUE FALSE DO 
+%token INT WHILE FOR IF ELSE RETURN VOID PRINT SCAN DO 
 %token <valor>num 
 %token <var_nome>id 
 
@@ -28,24 +34,25 @@
 %type <varAtr> Atrib
 */
 
-
 // --------------------PROGRAMA ------------------------------------
-
 /**
 Um programa é uma lista de declarações, lista de Funcões , e uma lista de Instruções 
 */
 
 %%
 
-Prog        : ListaDecla ListaFun ListInst                                                                        
-            ;
-
-ListaFun    :   
-            | ListaFun Funcao 
+Prog        : 					{fprintf(f,"START\n");}
+			ListaDecla  	 	{fprintf(f,"JUMP inicio\n");}
+			ListaFun 			{fprintf(f,"inicio:NOP\n");}
+			ListInst    		{fprintf(f,"STOP\n");}                                                                    
             ;
 
 ListaDecla  :                            
             | ListaDecla Decla 
+            ;
+
+ListaFun    :   
+            | ListaFun Funcao 
             ;
 
 ListInst    : Inst                               
@@ -58,6 +65,10 @@ ListInst    : Inst
 
 Funcao      : '#' TipoFun IdFun '(' ListaArg ')' '{' ListaDecla ListInst '}'              
             ;
+
+TipoFun     : VOID                             
+            | INT                           
+            ;  
 
 IdFun 		: id 
 			;
@@ -73,7 +84,6 @@ Tipo 		: INT
 			; 
 
 
-
 // --------------------DECLARACAO ------------------------------------
 
 Decla       : INT Var ';'                      
@@ -82,9 +92,7 @@ Decla       : INT Var ';'
             ;
 Var : id  ;
 
-TipoFun     : VOID                             
-            | INT                           
-            ;               
+             
 
 // --------------------INSTRUCAO ------------------------------------
 
@@ -97,12 +105,10 @@ Inst        : If
             | DoWhile
             | For                                       
             | Atrib ';'                                 
-            | Print';'                                 
+            | Print';' 							                               
             | Scan ';'                                 
             | RETURN Exp ';'                               
             ;
-
-
 
 // ------------------------------------ ATRIBUIÇAO ------------------------------------
 
@@ -114,14 +120,14 @@ Atrib       : Var '=' Exp
 
 // ------------------------------------ PRINT SCAN ------------------------------------
 
-Print:     PRINT '(' Exp ')'                          
+Print:     PRINT '(' Exp ')'  		{fprintf(f,"WRITEI\n");}                        
             ;
 
 Scan:      SCAN '(' Var')'                        
             ;
 // ------------------------------------ IF THEN ELSE ------------------------------------
 
-If          :  IF TestExpL ConjInst  Else
+If          :  IF TestExpLog ConjInst  Else
             ;
 
 Else        :       
@@ -130,12 +136,12 @@ Else        :
 
 // ------------------------------------# WHILE ---------------------------------------------
 
-While       : WHILE TestExpL ConjInst                                    
+While       : WHILE TestExpLog ConjInst                                    
             ;
 
 // ------------------------------------# DO WHILE ---------------------------------------------
 
-DoWhile     : DO ConjInst WHILE TestExpL ';'              
+DoWhile     : DO ConjInst WHILE TestExpLog ';'              
             ;
     
 // ------------------------------------# FOR ---------------------------------------------
@@ -143,34 +149,34 @@ DoWhile     : DO ConjInst WHILE TestExpL ';'
 For         : FOR ForHeader ConjInst                      
             ;
 
-ForHeader   :  '(' ForAtrib ';' ExpL ';' ForAtrib ')' 
+ForHeader   :  '(' ForAtrib ';' ExpLog ';' ForAtrib ')' 
             ;  
-
 
 ForAtrib    : Atrib  
             ;
 
 // -----------------------------------------------------------------CALCULO DE EXPRESSOES -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-ExpL 		: Exp 
+ExpLog 		: Exp 
 			|Exp '=''=' Exp
 			|Exp '!''=' Exp
 			|Exp '>''=' Exp
 			|Exp '<''=' Exp
 			|Exp '<' Exp
 			|Exp '>' Exp
+			; 
 
 
 Exp 		: Termo
 			|Exp '+' Termo 
 			|Exp  '-' Termo 
-			|Exp '|''|' Termo 
+			|Exp '|''|' ExpLog 
 			; 
 
 
 Termo		: Fun
 			| Termo '/' Fun
 			| Termo '*' Fun
-			| Termo  '&''&' Fun
+			| Termo '&''&' ExpLog
 			; 
 
 Fun 	   	: num                       
@@ -189,7 +195,7 @@ FunArgs2    : Exp
             | FunArgs2 ',' Exp                 
             ;
 
-TestExpL    : '(' ExpL ')'                                        
+TestExpLog  : '(' ExpLog ')'                                        
             ;
 
 
@@ -197,9 +203,32 @@ TestExpL    : '(' ExpL ')'
 
 #include "lex.yy.c"
 
+/*
+int yyerror(char* s) {
+    printf("\n\x1b[10;01m%s (line %d) \x1b[0m\n", s, yylineno);
+    return 0;
+}
+*/
+
+/*
+
 int yyerror(char *s) {
 	fprintf(stderr, "Erro na linha ( %d! ) %s\n", yylineno, s);
 	return 0;
+}
+*/
+
+int  yyerror(char *s){
+    fprintf(stderr,"ERRO: Syntax LINHA: %d MSG: %s\n",ccLine,s);
+    exit(0);
+    return 0; 
+}
+
+void inicio()
+{
+    s = initStack();
+    total = 0;
+    f = fopen("assembly.out", "w");
 }
 
 int main(){

@@ -18,12 +18,11 @@ size=10;
 // }
 
 for (i = 0; i < 5; i++){
-    printi(arr[i]);
-}
+    print(arr[i]); }
 
 // if (5>2) {
 // 	if (8>5) {
-// 		printi(7);
+// 		print(7);
 // 	}
-// 	printi(12);
+// 	print(12);
 // }

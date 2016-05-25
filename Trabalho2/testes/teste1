@@ -1,7 +1,4 @@
-
-
 int i;
-
 # int fun(int a) {
     int ret;
     if (a > 0) {
@@ -9,5 +6,4 @@ int i;
     }
     return ret;
 }
-
-printi(fun(i + 2)); 
+print (fun(i + 2)); 
