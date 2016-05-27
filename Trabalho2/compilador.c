@@ -139,7 +139,7 @@ int  decVar(char* varName, int linha,int coluna) {
         erro += (existeVar(vGlobal, varName) != NULL);
     }
 
-    	/*se der dirente de zero*/
+    	/*se der diferente de zero*/
 
     if(!erro) {
 
@@ -173,19 +173,11 @@ int  decVar(char* varName, int linha,int coluna) {
 
 			hashmap_put(context->vars, varName, (any_t)variavel);
 
-
-
-
-
-
-
     	erro=OK;
 
     }
-
-
     else {
-    	printf("dsa\n");
+    		
     	//yyerror("Variável já declarada anteriormente");
     	erro=ERRO_A_VAR_JA_EXISTE;
     }
