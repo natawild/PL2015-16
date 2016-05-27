@@ -1,5 +1,7 @@
 %{
+#include "compilador.h"
 #include "y.tab.h"
+
 
 %}
 

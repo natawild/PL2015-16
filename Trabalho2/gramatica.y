@@ -1,9 +1,10 @@
 %{ 
+#include "compilador.h"
 #include <stdio.h>
 #include "stack.h"
 #include <stdlib.h>
 #include "y.tab.h"
-	
+
 
 
 extern ccLine;
@@ -17,11 +18,10 @@ int lvars;
 
 %}
 
-
 %union{
     char* var_nome;
     int valor;
- 
+    Tipo tipo;
     struct sVarAtr
     {
         char* var_nome;
@@ -31,14 +31,16 @@ int lvars;
 }
 
 
-%token INT WHILE FOR IF ELSE RETURN VOID PRINT SCAN DO 
+%token INT WHILE FOR IF ELSE RETURN VOID PRINT SCAN DO
 %token <valor>num 
 %token <var_nome>id 
 
-/*
-%type <varAtr> Var
-%type <varAtr> Atrib
-*/
+%type <tipo> TipoFun
+%type <tipo> Tipo
+%type <var_nome> IdFun
+
+
+
 
 // --------------------PROGRAMA ------------------------------------
 /**
@@ -47,7 +49,7 @@ Um programa é uma lista de declarações, lista de Funcões , e uma lista de In
 
 %%
 
-Prog        : ListaDecla  	 	{fprintf(f,"START\n");}
+Prog       : ListaDecla  	 	{fprintf(f,"START\n");}
 			ListaFun 			{fprintf(f,"JUMP inicio\n");}		
 			ListInst    		{fprintf(f,"inicio:NOP\n");}                                                               
                    				{fprintf(f,"STOP\n");}  
@@ -69,11 +71,13 @@ ListInst    : Inst
 /** A declaração de funções é precedida pelo símbolo terminal '\#'. 
  */
 
-Funcao      : '#' TipoFun IdFun '(' ListaArg ')' '{' ListaDecla ListInst '}'              
+Funcao      : '#' TipoFun IdFun                 {inserFuncao($2,$3);}
+                    '(' ListaArg ')' 
+                    '{' ListaDecla ListInst '}'             
             ;
 
-TipoFun     : VOID      	                     
-            | INT                           
+TipoFun     : VOID      	        {$$ =_VOID;}              
+            | INT                   {$$ =_INTS;}        
             ;  
 
 IdFun 		: id 
@@ -86,7 +90,7 @@ ListaArg2   : Tipo Var
             | ListaArg2  ','  Tipo Var         
             ;
 
-Tipo 		: INT
+Tipo 		: INT                 {$$ =_INTS;} 
 			; 
 
 
@@ -98,7 +102,7 @@ Decla       : INT Var ';'   {fprintf(f,"PUSHI 0\n"); vars++; }
             ;
 
 
-Var 		: id  
+Var 		: id              {fprintf(f,"%s\n",$1);} 
 			;
 
 // --------------------INSTRUCAO ------------------------------------
@@ -253,22 +257,15 @@ void inicio()
 
 int main(int argc, char* argv[]){
 	vars=0; 
-	lvars=0; 
+	lvars=0;
+    initVGlobalMap(); 
   s=initStack();
+
 	f=fopen("assembly.txt","w+");
 		yyparse();
 		fclose(f); 
+        free(s);
 		return 0; 
 	}
 
-
-
-/*
-
-int main(){
-	
-	yyparse();
-	return 0; 
-}
-*/
 
