@@ -1,0 +1,318 @@
+%
+% Layout retirado de http://www.di.uminho.pt/~prh/curplc09.html#notas
+%
+\documentclass{report}
+\usepackage[portuges]{babel}
+%\usepackage[utf8]{inputenc}
+\usepackage[latin1]{inputenc}
+\usepackage{graphicx}
+
+\usepackage{url}
+%\usepackage{alltt}
+%\usepackage{fancyvrb}
+\usepackage{listings}
+%LISTING - GENERAL
+\lstset{
+	basicstyle=\small,
+	numbers=left,
+	numberstyle=\tiny,
+	numbersep=5pt,
+	breaklines=true,
+    frame=tB,
+	mathescape=true,
+	escapeinside={(*@}{@*)}
+}
+%
+%\lstset{ %
+%	language=Java,							% choose the language of the code
+%	basicstyle=\ttfamily\footnotesize,		% the size of the fonts that are used for the code
+%	keywordstyle=\bfseries,					% set the keyword style
+%	%numbers=left,							% where to put the line-numbers
+%	numberstyle=\scriptsize,				% the size of the fonts that are used for the line-numbers
+%	stepnumber=2,							% the step between two line-numbers. If it's 1 each line
+%											% will be numbered
+%	numbersep=5pt,							% how far the line-numbers are from the code
+%	backgroundcolor=\color{white},			% choose the background color. You must add \usepackage{color}
+%	showspaces=false,						% show spaces adding particular underscores
+%	showstringspaces=false,					% underline spaces within strings
+%	showtabs=false,							% show tabs within strings adding particular underscores
+%	frame=none,								% adds a frame around the code
+%	%abovecaptionskip=-.8em,
+%	%belowcaptionskip=.7em,
+%	tabsize=2,								% sets default tabsize to 2 spaces
+%	captionpos=b,							% sets the caption-position to bottom
+%	breaklines=true,						% sets automatic line breaking
+%	breakatwhitespace=false,				% sets if automatic breaks should only happen at whitespace
+%	title=\lstname,							% show the filename of files included with \lstinputlisting;
+%											% also try caption instead of title
+%	escapeinside={\%*}{*)},					% if you want to add a comment within your code
+%	morekeywords={*,...}					% if you want to add more keywords to the set
+%}
+
+\usepackage{xspace}
+
+\parindent=0pt
+\parskip=2pt
+
+\setlength{\oddsidemargin}{-1cm}
+\setlength{\textwidth}{18cm}
+\setlength{\headsep}{-1cm}
+\setlength{\textheight}{23cm}
+
+\def\darius{\textsf{Darius}\xspace}
+\def\java{\texttt{Java}\xspace}
+\def\pe{\emph{Publicação Eletrónica}\xspace}
+
+%%%%\input{LPgeneralDefintions}
+\begin{document}
+	
+	
+\begin{titlepage}
+	
+	
+	\begin{minipage}{0.3\textwidth}
+		\begin{flushleft} 
+			\includegraphics[width=\textwidth]{EENG.jpg}
+		\end{flushleft}
+	\end{minipage}
+	\begin{minipage}{0.6\textwidth}
+		\begin{flushright} 
+			
+			\textsc{Departamento de Engenharia Informática}\\[0.1cm]
+			\bfseries Mestrado Integrado em Engenharia Informática \\ [0.1cm]
+			\bfseries \textit{Processamento de Linguagens}\\[8mm]
+			
+		\end{flushright}
+	\end{minipage}
+	
+	\vspace{3cm}
+	
+	\begin{center}
+			\LARGE \textbf{Trabalho 2 }\\[1.5cm]
+			
+			\LARGE 	\textbf{Compilador de uma LPIS (Linguagem de Programação Imperativa Simples)}\\[1.5cm]
+			
+		
+		{\Large \bfseries Grupo 38\\[2cm] }
+		\noindent\begin{minipage}[b]{.2\textwidth}
+			\includegraphics[scale=0.18]{celia}
+			\small{Célia Figueiredo a67637}
+		\end{minipage} 
+		\hfill
+		\begin{minipage}[b]{.2\textwidth}
+			\includegraphics[scale=0.15]{gil}
+			\small{Gil Gonçalves a67738}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[b]{.2\textwidth}
+			\includegraphics[scale=0.9]{many}
+			\small{Diogo Tavares a61044 }
+		\end{minipage} 
+		\vspace{3ex}
+		\vfill
+		\large Braga, {\large \today}
+		
+	\end{center}
+\end{titlepage}	
+
+
+
+\begin{abstract}
+	
+Este relatório descreve o processo de desenvolvimento e decisões tomadas para a realização do segundo trabalho prático da Unidade Curricular de Processamento de Linguagens.\\ O problema a resolver consiste na criação de uma linguagem imperativa simples (LPIS) e da respetiva gramatica independente de contexto \textbf{GIC} seguida do desenvolvimento de um compilador para a mesma que gera pseudo-código \textit{Assembly}.
+
+
+A linguagem desenvolvida foi baseada na linguagem de programação C, e suporta:
+\begin{itemize}
+	\item Variáveis globais
+	\item Ciclos: for, while, do while
+	\item Estruturas de Condição: If ... Else
+	\item Expressões Aritméticas e lógicas
+	\item Funções com argumentos
+	\item Declaração de variáveis locais dentro das funções
+\end{itemize}
+
+O compilador foi desenvolvido com recurso ao analisador léxico Flex e ao analisador sintático Yacc.
+
+\end{abstract}
+
+\tableofcontents
+
+\chapter{Introdução} \label{intro}
+
+O presente trabalho enquadra-se na unidade curricular de Processamento de Linguagens da Licenciatura em Engenharia Informática da Universidade do Minho. O trabalho pretende aumentar a experiência em engenharia de linguagens, assim como incentivar o desenvolvimento de processadores de linguagens e compiladores em ambiente Linux. As ferramentas que suportam a sua implementação consistem no conjunto flex-yacc, sendo estes um gerador de analisadores léxicos e um gerador de analisadores sintáticos/semânticos, respetivamente. 
+
+
+Inicialmente é definida uma linguagem de programação imperativa simples, a qual deve permitir manusear variáveis do tipo inteiro assim como realizar operações básicas. As variáveis devem sem declaradas no início do programa e não pode haver re-declarações. Após a validação da linguagem criada com o docente, é desenvolvido um compilador para esta linguagem, com base na GIC criada e com recurso ao Gerador Yacc/Flex. O compilador da linguagem deve gerar pseudo-código Assembly da Máquina Virtual fornecida.
+
+
+\section*{Estrutura do Relatório} \
+Este documentos está dividido em xxxxx partes 
+No capítulo \ref{ae} faz-se uma análise detalhada do problema proposto
+de modo a poder-se especificar  as entradas, resultados e formas de transformação do ficheiro \textit{.bib}. 
+
+No capítulo \ref{cdres} serão descritas as estruturas de dados implementadas para a realização do problema descrito. 
+No capítulo \ref{codtestes} serão mostradas as expressões regulares desenvolvidas para a implementação do caso de estudo, assim como os testes realizados e os resultados. 
+No capítulo~\ref{concl} termina-se o relatório com uma síntese do que foi dito,
+as conclusões e o trabalho futuro. No fim do documento estará incluido ficheiros anexos com o código desenvolvido. 
+
+\chapter{Análise e Especificação} \label{ae}
+\section{Descrição informal do problema - Enunciado}
+
+
+Pretende-se que comece por definir uma linguagem de programação imperativa simples LPIS, a seu gosto.
+
+Apenas deve ter em consideração que a LPIS terá de permitir:
+
+\begin{itemize}
+	\item \emph{declarar e manusear} variáveis atómicas do tipo \emph{inteiro},
+	com os quais se podem realizar as habituais operações aritméticas, relacionais e lógicas.
+	\item \emph{declarar e manusear} variáveis estruturadas do tipo \emph{array (a 1 ou 2 dimensões) de inteiros}, em relação aos quais é apenas permitida a operação de indexação (índice inteiro).
+	\item \emph{efetuar} instruções algorítmicas básicas como a \emph{atribuição de expressões a variáveis}.
+	\item \emph{ler} do \emph{standard input} e \emph{escrever} no \emph{standard output}.
+	\item \emph{efetuar} instruções para controlo do fluxo de execução--- \emph{condicional} e \emph{cíclica}---que possam ser aninhadas.
+	\item \emph{definir e invocar subprogramas} sem parâmetros mas que possam retornar um resultado atómico (opcional).
+\end{itemize}
+
+Neste tipo de linguagens, as variáveis deverão ser declaradas no início do
+programa e não pode haver re-declarações, nem utilizações sem declaração prévia.
+Se nada for explicitado, o valor da variável após a declaração é 0 (zero).
+
+\paragraph{}
+
+Como descrito acima o desafio que nos foi proposto consiste na criação de uma linguagem imperativa simples apenas com as características mais básicas, o desenvolvimento de uma \textbf{GIC} para a mesma e ainda a criação de um compilador gerador de \textbf{pseudo-código} Assembly, utilizando os recursos ao Gerador YACC/LEX.
+\paragraph{}
+Posto isto tivemos então de, primeiramente, pensar e desenhar uma linguagem imperativa ao nosso gosto, seguindo os requisitos pedidos. De seguida foi necessário criarmos uma gramática que a descrevesse e, finalmente, com recurso a essa gramática, tornar possível o armazenamento dos dados vindos de um programa escrito na nossa linguagem necessários à geração do \textbf{pseudo-código} Assembly.
+
+
+\section{Especificação do Requisitos}
+\subsection{Dados}
+Os dados fornecidos são um ficheiro \textit{.bib}, este que é um ficheiro com as caracteristicas de um ficheiro \textit{BibTex}. 
+
+Cada tipo de categoria tem os seus campos obrigatórios, neste acaso o objetivo de uma das tarefas será pesquisar através do campo \textbf{author = } o nome do autor e transformá-lo no formato "N. Apelido". 
+
+O nome da categoria é seguida por uma chaveta, e o primeiro campo será o nome para a referência a ser introduzida, os campos de cada categoria são separados por vírgula e a seguir ao campo aparecerá o simbolo igual (=), deixámos um exemplo da sintaxe da categoria \textbf{$@$phdthesis} e os respetivos campos presentes: 
+
+\begin{verbatim}
+@phdthesis{Mos75a,
+author = "P. D. Mosses",
+title = "Mathematical Semantics and Compiler Generation",
+year = 1975,
+school = "Oxford University",
+annote = "compilacao incremental, atributos, ambientes prog"
+}
+\end{verbatim}
+
+É também fornecido o nome de ferramentas de apoio à resolução do problema, neste caso o \textit{Graph Viz}, que permitirá colocar gráficamente a informação dos grafos criados, sendo que tornará as iterações entre os autores mais percetiveis. 
+
+
+
+
+\chapter{Concepção/desenho da Resolução} \label{cdres}
+
+Como representado na figura 1 a estrutura do nosso projeto terá de passar pelo desenvolvimento de um analisador léxico em \textit{Flex} que fará o reconhecimento dos \textit{tokens} que são utilizados no analisador semântico que gera o código \textit{Assembly}.
+
+
+\section{Desenho da Linguagem}
+
+\section{Desenho da Gramatica}
+
+\section{Estruturas de Dados}
+
+
+\subsection{Stack}
+
+De forma a evitar confusão na atribuição de \emph{labels} relativas a \emph{ifs} e \emph{loops} é utilizado um contador de condições. À medida que é encontrada uma instrução que implique o uso de uma condição, este contador é incrementado e o seu valor é colocado numa stack. Deste modo, o valor que se encontra no topo da stack é relativo ao último \emph{ciclo/if} encontrado. Sempre que é encontrado o final de uma condição, o valor no topo da stack é removido. Através do uso de um contador e de uma stack, é muito mais simples gerir as \emph{labels} e as operações de controlo, como \emph{JUMPs} e \emph{JZs}.
+A stack utilizada implementa apenas as funções necessárias para a sua inicialização, inserção, remoção e consulta. Com as operações de push/pop são inseridos/removidos valores no topo da stack, e com a operação de get apenas é consultado o valor no topo da stack, sem que este seja removido. Esta última operação é útil para a geração de instruções 'JZ' na geração de código VM.
+
+
+\subsection{HashMap}
+
+Como foi referido anteriormente, é utilizada uma \emph{hashmap} com o objetivo de guardar as variáveis e as funções. Quanto às variáveis, é necessário guardar e aceder a informação como o seu endereço e tipo. Sendo assim, foi criada uma estrutura de dados auxiliar para armazenar essa informação. O nome da variável é utilizado como chave e, a partir dela, conseguimos aceder à sua informação correspondente na hashmap. 
+Relativamente às funções, é necessário guardar e aceder a informação como o seu nome, informação relativa aos seus argumentos de entrada e o tipo de dados de saída. Para esse feito, também foram necessárias estruturas de dados auxiliares como uma lista ligada capaz de armazenar informação relativa aos argumentos de entrada e uma outra que contem a informação relativa ao tipo de dados de saída, dados de entrada e nome da função. Neste caso, o nome da função funciona como chave na \emph{hashmap} e o seu valor é a estrutura que contem a informação mais geral sobre a função.
+A \emph{hashmap} utilizada implementa funções necessárias para a sua inicialização, inserção, remoção e consulta, sendo que também contém outras funções que não foram utilizadas no desenvolvimento deste projeto.
+
+
+\chapter{Codificação e Testes} \label{codtestes}
+
+\section{Alternativas, Decisões e Problemas de Implementação}
+
+
+
+
+\subsection{Makefile}
+O principal objetivo da Makefile é facilitar a compilação e execução do programa.
+Para isso criamos o seguinte ficheiro: 
+
+
+
+
+
+\section{Testes realizados e Resultados}
+
+\subsection{Teste 1}
+
+\subsection{Teste 2}
+
+\subsection{Teste 3}
+
+\subsection{Teste 4}
+
+\subsection{Teste 5}
+
+\subsection{Teste 6}
+
+
+\chapter{Conclusão} \label{concl}
+
+Após a conclusão deste trabalho verificámos que não cumprimos todos os objetivos pedidos no enunciado. 
+
+Na alínea a pressupusemos que as categorias com o mesmo nome e que se diferenciavam apenas em maiúsculas ou minusculas pertenciam à mesma categoria. Pois assim não estariamos a repetir informação. 
+
+Na alínea b1 tratamos os nomes dos autores de modo a que ficassem com o formato \textbf{N.Apelido}, utilizando arrays. 
+
+Na alinea b2 não conseguimos colocar no início das categorias os campos autor e título. 
+
+Na alinea c foi implementado que o utilizador escolhesse o autor e assim gerar o grafo com os autores que publicam diretamente com ele. Um aspeto a ser melhorado poderia ser em vez de aparecerem as várias linhas que correspondem ao número de publicações conjuntas colocar apenas uma com a contagem. 
+
+Como trabalho futuro pretende-se melhorar os algoritmos que permitam um melhor funcionamento dos filtros. 
+
+
+
+\appendix
+\chapter{Código do Programa}
+
+Lista-se a seguir o código que foi desenvolvido para a alínea a: 
+
+
+
+Lista-se a seguir o código que foi desenvolvido para a alínea b1: 
+
+
+
+Lista-se a seguir o código que foi desenvolvido para a alínea b2: 
+
+
+
+Lista-se a seguir o código que foi desenvolvido para a alínea c: 
+
+
+
+\bibliographystyle{alpha}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document} 
