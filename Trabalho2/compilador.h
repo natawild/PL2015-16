@@ -9,14 +9,23 @@ typedef enum eTipo{_VOID,_INTS,_INTA,_INTM}Tipo;
 
 typedef struct sEndereco{
     int addr;
-    char scope;
+    char tipoVar;
     Tipo tipo;
 } Endereco;
 
 int initVGlobalMap();
 Funcao existeFuncao(char * func);
 int inserFuncao(Tipo tipo,char * name);
-int decVar(char* varName, int linha,int coluna);
+int decVar(char* varName, int linha,char tipo);
+int decArgumentos(Tipo tipo,char * nome);
+int funcaoExiste(char * nome);
+int proximoArgumento(Tipo type);
+int nurmeroArgumentos();
+void fim();
+void decFunArgRefresh();
+int decFunRetAddr();
+
+Endereco getAddr(char* varName);
 
 
 

@@ -215,6 +215,38 @@ TestExpLog  : '(' ExpLog ')'
 
 %%
 
+int testeMatriz(int linha, int coluna) {
+
+    if(linha<=0) {
+        yyerror("Tamanho menor que zero");
+        return -1;
+    }
+
+    else {
+                if(coluna<=0) {
+
+                        yyerror("Coluna demasiado pequena");
+                            return -1;
+
+                }
+
+                else return 1;
+
+
+    }
+}
+
+int testeColuna(int linha) {
+
+    if(linha<=0) {
+        yyerror("Tamanho menor que zero");
+        return -1;
+    }
+
+    else return 1;
+}
+
+
 
 #include "lex.yy.c"
 

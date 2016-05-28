@@ -10,10 +10,11 @@
 #define ERRO_TIPO_INVALIDO -3
 #define ERRO_FUNCAO_NAO_EXISTE -4
 #define ERRO_A_FUNCAO_JA_EXISTE -5
-#define ERRO -5
+#define ERRO_A_COLUNA_ZERO -6
+#define ERRO -7
 
 
-//void yyerror(char *s);
+void yyerror(char *s);
 
 struct variavel{
     Tipo tipo;
@@ -24,7 +25,7 @@ struct variavel{
 
 typedef struct funcaoArg
 {
-    struct Variavel* v; 
+    struct variavel* v; 
     struct funcaoArg *next;
 }* FuncaoArg;
 
@@ -51,6 +52,8 @@ static Scope vGlobal;
 static Scope vInterna;
 
 static map_t mFuncMap;
+
+Variavel static existeVar(Scope fun, char* varName);
 
 
 int initVGlobalMap()
@@ -123,10 +126,11 @@ int inserFuncao(Tipo tipo,char * name) {
 }
 
 
-int  decVar(char* varName, int linha,int coluna) {
+int  decVar(char* varName, int linha,char tipo) {
 
 	Scope context; 
     int erro = 0;
+
 
     /* se não houver declarações locais irá ver existe variaveis globais com o mesmo nome*/
 
@@ -147,29 +151,31 @@ int  decVar(char* varName, int linha,int coluna) {
 
 
 
-    		if(linha>1 && coluna>1) {
+    		if(linha>2 && tipo=='M') {
 
     					variavel->tipo= _INTM;
 					}
 
     		else {
-    				/*-10 porque o array não tem colunas*/		
-    				if(linha>1 && coluna==-10) {
+    			
+    				if(linha>1 && tipo=='A') {
 
     				(variavel->tipo)= _INTA;
  					
  					}
 
  					else {
-
+ 							
  							variavel->tipo= _INTS;
 
  					}
 			}
 
+			
+
 			variavel->nome=strdup(varName);
 			variavel->memAdr=context->addrCount;
-			context->addrCount=context->addrCount+linha+coluna;
+			context->addrCount=context->addrCount+linha;
 
 			hashmap_put(context->vars, varName, (any_t)variavel);
 
@@ -178,7 +184,7 @@ int  decVar(char* varName, int linha,int coluna) {
     }
     else {
     		
-    	//yyerror("Variável já declarada anteriormente");
+    	yyerror("Variável já declarada anteriormente");
     	erro=ERRO_A_VAR_JA_EXISTE;
     }
 
@@ -192,22 +198,209 @@ return erro;
 }
 
 
+/* declarar os argumentos de uma função*/
+int decArgumentos(Tipo tipo,char * nome) {
+		int erro=0;
+		/* se o apontador para o ultimo argumento estiver a nulo poem o apontador da variavel inicio a apontar para o fim, depois de alocar
+		espaço*/
+
+	if(funcaoAux->argsEnd==NULL) {
+		funcaoAux->argsEnd=(FuncaoArg)malloc(sizeof(struct funcaoArg));
+		funcaoAux->args=funcaoAux->argsEnd;
+	}
+
+	else {		/* senão continua a inserir elementos no fim da lista */
+
+				funcaoAux->argsEnd->next=(FuncaoArg)malloc(sizeof(struct funcaoArg));
+				funcaoAux->argsEnd=funcaoAux->argsEnd->next;
+	}
+
+	funcaoAux->argsEnd->next=NULL;
+
+	erro= decVar(nome,1,0);
+
+	if(erro==OK) {
+			/* senão houver variaveis com o mesmo nome insere na ultima posição a variavel */
+
+		funcaoAux->numeroArg++;
+
+		hashmap_get(vInterna->vars, nome, (any_t*) &(funcaoAux->argsEnd->v));
+	}
+	else {yyerror("Variável já declarada anteriormente");
+
+		}
+
+	return erro;
+}
+
+/* verifica se a funcao existe*/
+
+int funcaoExiste(char * nome) {
+
+	emUsoFun=existeFuncao(nome);
+	/* se retornar nulo a função não existe */
+	if(emUsoFun==NULL) {
+
+		//yyerror("Erro funcao não existe");
+        return ERRO_FUNCAO_NAO_EXISTE;
+	}
+
+	else {
+		/* o argsEnd passa a apontar para o sitio do argumento inicial*/
+		emUsoFun->argsEnd=emUsoFun->args;
+		
+		return OK;
+	}
+
+}
+
+int proximoArgumento(Tipo type) {
+
+
+	if(emUsoFun->argsEnd==NULL) {
+	
+		 yyerror("Erro numero invalido de argumentos");
+        return ERRO;
+	}
+
+
+
+	if(type!=(emUsoFun->argsEnd->v->tipo)) {
+
+
+		  yyerror("Erro tipo invalido");
+
+		  return ERRO;
+
+
+	}
+	emUsoFun->argsEnd=emUsoFun->argsEnd->next;
+	return OK;
+}
+/* quando for nulo significa que acabei de percorrer os argumentos que a funcao recebe, por isso retorno o numero de argumentos que recebe*/
+
+int nurmeroArgumentos(){
+
+	if(emUsoFun->argsEnd!=NULL) {
+
+		yyerror("Erro numero de argumentos invalido");
+        return ERRO;
+
+
+	}
+
+	else {
+
+			return emUsoFun->numeroArg;
+
+		}
+}
+
+
+int decFunRetAddr(){
+    return -(funcaoAux->numeroArg) - 1;
+}
+
+
+void decFunArgRefresh(){
+    FuncaoArg i = funcaoAux->args;
+    while(i != NULL){
+
+
+        i->v->memAdr -= funcaoAux->numeroArg;
+        
+        i = i->next;
+    }
+}
+
+
+
+void fim(){
+    funcaoAux = NULL;
+    vInterna = NULL;
+}
+
+
+
+
+Endereco getEndereco(char * varName) {
+
+
+	Variavel tmp;
+	int memoria;
+	char tipoVar;
+	Tipo type ;
+
+
+	if(vInterna==NULL) {
+
+			tmp=existeVar(vGlobal,varName);
+			tipoVar='G';
+	}
+
+	else {
+				tmp=existeVar(vInterna,varName);
+				tipoVar='L';
+
+				if(tmp==NULL) {
+
+					tmp=existeVar(vGlobal,varName);
+					tipoVar='G';
+				}
+	}
+
+	if(tmp != NULL) {
+		memoria = tmp->memAdr;
+        type = tmp->tipo;
+	} else {
+        memoria = ERRO_A_VAR_NAP_EXISTE;
+        yyerror("Variável não declarada");
+    }
+
+
+    Endereco ret = {memoria,tipoVar,type};
+
+
+ return ret;
+
+}
 
 
 
 
 
 
-
+/***************
 int main(int argc, char const *argv[])
 {
 	initVGlobalMap();
-	//inserFuncao(_VOID,"ola");
+	inserFuncao(_VOID,"ola");
 	//inserFuncao(_INTS,"ola");
-	//decVar("ola",1,10);
-	//decVar("ola",1,0);
+	decVar("olas",3,'M');
+	decVar("ola",2,'A');
+	//decArgumentos(_INTS,"ola");
+	//decArgumentos(_INTM,"olds");
+	//decArgumentos(_INTM,"oldsd");
+	//decArgumentos(_INTM,"oldsdd");
+	//decArgumentos(_INTM,"oldsddd");
+	//decArgumentos(_INTS,"ola");
+	//funcaoExiste("ola");
+	//decFunArgRefresh();
+/*
+	while(ERRO!=proximoArgumento(_INTS)) {
+
+			printf("ola\n");
+
+}
+
+	printf("acabou\n");
 
 
+	//printf("%d\n", decFunRetAddr());
+
+	Endereco a =getEndereco("oldsdd");
+
+	printf("%d , %c , %d\n",a.addr, a.tipoVar,a.tipo);
 
 
 	return 0;
@@ -215,5 +408,4 @@ int main(int argc, char const *argv[])
 
 
 
-
-
+*/
