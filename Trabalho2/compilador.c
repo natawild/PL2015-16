@@ -198,7 +198,7 @@ return erro;
 }
 
 
-/* declarar os argumentos de uma função*/
+/* declarar os argumentos que uma funcao recebe */
 int decArgumentos(Tipo tipo,char * nome) {
 		int erro=0;
 		/* se o apontador para o ultimo argumento estiver a nulo poem o apontador da variavel inicio a apontar para o fim, depois de alocar
@@ -217,7 +217,7 @@ int decArgumentos(Tipo tipo,char * nome) {
 
 	funcaoAux->argsEnd->next=NULL;
 
-	erro= decVar(nome,1,0);
+	erro= decVar(nome,1,'S');
 
 	if(erro==OK) {
 			/* senão houver variaveis com o mesmo nome insere na ultima posição a variavel */
