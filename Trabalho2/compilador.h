@@ -17,7 +17,7 @@ int initVGlobalMap();
 Funcao existeFuncao(char * func);
 int inserFuncao(Tipo tipo,char * name);
 int decVar(char* varName, int linha,char tipo);
-int decArgumentos(Tipo tipo,char * nome);
+int decArgumentos(char * nome);
 int funcaoExiste(char * nome);
 int proximoArgumento(Tipo type);
 int nurmeroArgumentos();

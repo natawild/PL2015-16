@@ -1,6 +1,7 @@
 %{
 #include "compilador.h"
 #include "y.tab.h"
+int ccLine = 1;
 
 
 %}
@@ -40,7 +41,9 @@ do          {return(DO);}
 \&			{return('&');}
 [a-zA-Z]+  	{yylval.var_nome = strdup(yytext); return(id);}
 [0-9]+     	{yylval.valor = atoi(yytext); return(num);}
-\/\/.* 		{ ; } 
+[\n]        {ccLine++;}
+\/\/.*      { ; }     
+.           { ; }
 
 
 %%

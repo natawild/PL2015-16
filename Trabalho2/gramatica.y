@@ -38,6 +38,7 @@ int lvars;
 %type <tipo> TipoFun
 %type <tipo> Tipo
 %type <var_nome> IdFun
+%type <var_nome> Var
 
 
 
@@ -96,9 +97,16 @@ Tipo 		: INT                 {$$ =_INTS;}
 
 // --------------------DECLARACAO ------------------------------------
 
-Decla       : INT Var ';'   {fprintf(f,"PUSHI 0\n"); vars++; }   			                
-            | INT Var '[' num ']' ';'
-            | INT Var '[' num ']' '[' num ']' ';'         
+Decla       : INT Var ';'                               {decVar($2,1,'S');fprintf(f,"PUSHI 0\n"); vars++; }   			                
+            | INT Var '[' num ']' ';'                   {if(testeColuna($4)==1) 
+                                                                {decVar($2,$4,'A');}
+                                                                else {yyerror("Tamanho menor que 1");}
+                                                            }
+            | INT Var '[' num ']' '[' num ']' ';'       {if(testeMatriz($4,$7)==1) 
+                                                                {decVar($2,$4,'M');}
+                                                                else {yyerror("Tamanho menor que 1");}        
+                                                                }  
+
             ;
 
 
@@ -108,17 +116,18 @@ Var 		: id              {fprintf(f,"%s\n",$1);}
 // --------------------INSTRUCAO ------------------------------------
 
 ConjInst    :   
-            |'{' ListInst '}'
+            |'{' ListInst '}'               
             ;
 
-Inst        : If                                          
+Inst        : If                                                                  
             | While                                     
             | DoWhile
             | For                                       
             | Atrib ';'                                 
             | Print';' 							                               
             | Scan ';'                                 
-            | RETURN Exp ';'                               
+            | RETURN Exp ';'     {fprintf(f,"STOREL %d\n",decFunRetAddr());fprintf(f,"RETURN\n");}
+            | ELSE               { yyerror("'Else' sem um 'If' anteriormente");return 0;}                          
             ;
 
 // ------------------------------------ ATRIBUIÇAO ------------------------------------
@@ -138,9 +147,9 @@ Scan:      SCAN '(' Var')'   		//{fprintf(f,"\tread %s\n\tatoi\n\tstoreg %d",$1,
             ;
 // ------------------------------------ IF THEN ELSE ------------------------------------
 
-If          :  IF 
+If          :  IF             {total++; push(s,total);}
 			TestExpLog   	{fprintf(f,"JZ endCond%d\n", get(s));}
-			ConjInst  		 {fprintf(f," endCo%d\n", pop(s));}	
+			ConjInst  		 {fprintf(f," endCond%d\n", pop(s));}	
 			Else
             ;
 
@@ -218,14 +227,14 @@ TestExpLog  : '(' ExpLog ')'
 int testeMatriz(int linha, int coluna) {
 
     if(linha<=0) {
-        yyerror("Tamanho menor que zero");
+        
         return -1;
     }
 
     else {
                 if(coluna<=0) {
 
-                        yyerror("Coluna demasiado pequena");
+                        
                             return -1;
 
                 }
@@ -239,7 +248,7 @@ int testeMatriz(int linha, int coluna) {
 int testeColuna(int linha) {
 
     if(linha<=0) {
-        yyerror("Tamanho menor que zero");
+        
         return -1;
     }
 
@@ -261,8 +270,9 @@ int yyerror(char* s) {
 
 
 int yyerror(char *s) {
-	fprintf(stderr, "Erro na linha ( %d! ) %s\n", yylineno, s);
-	return 0;
+	
+    fprintf(stderr,"ERRO: Syntax LINHA: %d MSG: %s\n",ccLine,s);
+   return 0;
 }
 
 
@@ -288,8 +298,9 @@ void inicio()
 
 
 int main(int argc, char* argv[]){
-	vars=0; 
+	total=0; 
 	lvars=0;
+    vars=0;
     initVGlobalMap(); 
   s=initStack();
 

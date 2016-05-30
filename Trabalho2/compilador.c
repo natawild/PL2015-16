@@ -49,7 +49,7 @@ typedef struct sScope{
 static Funcao emUsoFun;
 static Funcao funcaoAux;
 static Scope vGlobal;
-static Scope vInterna;
+static Scope vInterna;/*variaveis da função tanto internas como as que recebe*/
 
 static map_t mFuncMap;
 
@@ -199,7 +199,7 @@ return erro;
 
 
 /* declarar os argumentos que uma funcao recebe */
-int decArgumentos(Tipo tipo,char * nome) {
+int decArgumentos(char * nome) {
 		int erro=0;
 		/* se o apontador para o ultimo argumento estiver a nulo poem o apontador da variavel inicio a apontar para o fim, depois de alocar
 		espaço*/

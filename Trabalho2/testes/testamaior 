@@ -1,12 +1,14 @@
-int a;
 int b;
+int a[1][10];
 int c;
 int maior;
 maior = a;
+print("a");
 if(maior < b){
 maior = b;
 }
 if(maior < c){
 maior = c;
 }
-return maior;
+
+

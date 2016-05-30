@@ -1,14 +1,28 @@
+b
 PUSHI 0
+a
+c
 PUSHI 0
-PUSHI 0
+maior
 PUSHI 0
 START
 JUMP inicio
+maior
+a
+a
+maior
+b
 inf
-JZ endCond0
- endCo0
+JZ endCond1
+maior
+b
+ endCond1
+maior
+c
 inf
-JZ endCond0
- endCo0
+JZ endCond2
+maior
+c
+ endCond2
 inicio:NOP
 STOP
