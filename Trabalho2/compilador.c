@@ -279,7 +279,7 @@ int proximoArgumento(Tipo type) {
 }
 /* quando for nulo significa que acabei de percorrer os argumentos que a funcao recebe, por isso retorno o numero de argumentos que recebe*/
 
-int nurmeroArgumentos(){
+int numeroArgumentos(){
 
 	if(emUsoFun->argsEnd!=NULL) {
 
@@ -335,17 +335,17 @@ Endereco getEndereco(char * varName) {
 	if(vInterna==NULL) {
 
 			tmp=existeVar(vGlobal,varName);
-			tipoVar='G';
+			tipoVar='g';
 	}
 
 	else {
 				tmp=existeVar(vInterna,varName);
-				tipoVar='L';
+				tipoVar='l';
 
 				if(tmp==NULL) {
 
 					tmp=existeVar(vGlobal,varName);
-					tipoVar='G';
+					tipoVar='g';
 				}
 	}
 

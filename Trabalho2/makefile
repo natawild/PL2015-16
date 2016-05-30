@@ -17,5 +17,5 @@ hashmap.o: hashmap.c hashmap.h
 			gcc -c hashmap.c
 
 clean: 
-	rm  *.o lex.yy.c y.tab.c y.tab.h gramatica
+	rm  *.o lex.yy.c y.tab.c y.tab.h gramatica assembly.txt
 

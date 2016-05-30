@@ -20,12 +20,12 @@ int decVar(char* varName, int linha,char tipo);
 int decArgumentos(char * nome);
 int funcaoExiste(char * nome);
 int proximoArgumento(Tipo type);
-int nurmeroArgumentos();
+int numeroArgumentos();
 void fim();
 void decFunArgRefresh();
 int decFunRetAddr();
 
-Endereco getAddr(char* varName);
+Endereco getEndereco(char * varName);
 
 
 

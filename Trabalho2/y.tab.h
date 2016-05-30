@@ -78,11 +78,11 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 21 "gramatica.y" /* yacc.c:1909  */
+#line 23 "gramatica.y" /* yacc.c:1909  */
 
     char* var_nome;
     int valor;
- 
+    Tipo tipo;
     struct sVarAtr
     {
         char* var_nome;

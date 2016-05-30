@@ -1,28 +1,10 @@
-b
-PUSHI 0
-a
-c
-PUSHI 0
-maior
-PUSHI 0
-START
-JUMP inicio
-maior
-a
-a
-maior
-b
-inf
-JZ endCond1
-maior
-b
- endCond1
-maior
-c
-inf
-JZ endCond2
-maior
-c
- endCond2
-inicio:NOP
-STOP
+pushi 0
+pushi 0
+start
+jump inicio
+inicio:nop
+pushi 3
+storeg 0
+pushi 2
+storeg 1
+stop

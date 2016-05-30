@@ -1,9 +1,11 @@
 %{ 
 #include "compilador.h"
 #include <stdio.h>
+#include <string.h>
 #include "stack.h"
 #include <stdlib.h>
 #include "y.tab.h"
+
 
 
 
@@ -38,7 +40,7 @@ int lvars;
 %type <tipo> TipoFun
 %type <tipo> Tipo
 %type <var_nome> IdFun
-%type <var_nome> Var
+%type <varAtr> Var
 
 
 
@@ -50,10 +52,11 @@ Um programa é uma lista de declarações, lista de Funcões , e uma lista de In
 
 %%
 
-Prog       : ListaDecla  	 	{fprintf(f,"START\n");}
-			ListaFun 			{fprintf(f,"JUMP inicio\n");}		
-			ListInst    		{fprintf(f,"inicio:NOP\n");}                                                               
-                   				{fprintf(f,"STOP\n");}  
+Prog       :                    
+            ListaDecla          {fprintf(f,"start\n");fprintf(f,"jump inicio\n");}	 	
+			ListaFun 			{fprintf(f,"inicio:nop\n");}        		
+			ListInst    		{fprintf(f,"stop\n");}                                                         
+                   				
             ; 
 
 ListaDecla  :                            
@@ -74,7 +77,7 @@ ListInst    : Inst
 
 Funcao      : '#' TipoFun IdFun                 {inserFuncao($2,$3);}
                     '(' ListaArg ')' 
-                    '{' ListaDecla ListInst '}'             
+                    '{' ListaDecla ListInst '}'     {fim();}        
             ;
 
 TipoFun     : VOID      	        {$$ =_VOID;}              
@@ -97,26 +100,26 @@ Tipo 		: INT                 {$$ =_INTS;}
 
 // --------------------DECLARACAO ------------------------------------
 
-Decla       : INT Var ';'                               {decVar($2,1,'S');fprintf(f,"PUSHI 0\n"); vars++; }   			                
-            | INT Var '[' num ']' ';'                   {if(testeColuna($4)==1) 
-                                                                {decVar($2,$4,'A');}
+Decla       : INT id ';'                               {decVar($2,1,'S');fprintf(f,"pushi 0\n"); vars++; }   			                
+            | INT id '[' num ']' ';'                   {if(testeColuna($4)==1) 
+                                                                {decVar($2,$4,'A');fprintf(f,"pushn%d\n",$4);}
                                                                 else {yyerror("Tamanho menor que 1");}
                                                             }
-            | INT Var '[' num ']' '[' num ']' ';'       {if(testeMatriz($4,$7)==1) 
-                                                                {decVar($2,$4,'M');}
+            | INT id '[' num ']' '[' num ']' ';'       {if(testeMatriz($4,$7)==1) 
+                                                                {decVar($2,$4*$7,'M');fprintf(f,"pushn %d\n",$4*$7);}
                                                                 else {yyerror("Tamanho menor que 1");}        
                                                                 }  
 
             ;
 
 
-Var 		: id              {fprintf(f,"%s\n",$1);} 
+Var 		: id                                      {Endereco a=getEndereco($1); $$.var_nome=strdup($1); $$.valor=1;}
 			;
 
 // --------------------INSTRUCAO ------------------------------------
 
-ConjInst    :   
-            |'{' ListInst '}'               
+ConjInst    :                                       
+            |'{' ListInst '}'                   
             ;
 
 Inst        : If                                                                  
@@ -126,30 +129,42 @@ Inst        : If
             | Atrib ';'                                 
             | Print';' 							                               
             | Scan ';'                                 
-            | RETURN Exp ';'     {fprintf(f,"STOREL %d\n",decFunRetAddr());fprintf(f,"RETURN\n");}
+            | RETURN Exp ';'     {fprintf(f,"storel %d\n",decFunRetAddr());fprintf(f,"return\n");}
             | ELSE               { yyerror("'Else' sem um 'If' anteriormente");return 0;}                          
             ;
 
 // ------------------------------------ ATRIBUIÇAO ------------------------------------
 
-Atrib       : Var '=' Exp                                                                                      
-            | Var '+''+'                                                                                       
-            | Var'[' Exp ']' '=' Exp  
-            | Var'[' Exp ']' '[' Exp ']' '=' Exp  
+Atrib       : Var '=' Exp                       {Endereco a = getEndereco($1.var_nome); 
+                                                    if(a.tipo == _INTS){ fprintf(f,"store%c %d\n",a.tipoVar, a.addr);} 
+                                                        else {yyerror("Tipos incompativeis");return 0;  }  
+                                                } 
+
+            | Var '+''+'                        {Endereco a = getEndereco($1.var_nome); 
+                                                    if(a.tipo ==_INTS){fprintf(f,"pushi 1\n push%c %d\n add\n store%c %d\n",a.tipoVar,a.addr, a.tipoVar, a.addr);}
+                                                    else{yyerror("Tipos incompativeis"); return 0; } 
+                                                }    
+
+            | Var'[' Exp ']' '=' Exp            {Endereco a = getEndereco($1.var_nome); fprintf(f, "push%cp \n push%c %d padd\n",(a.tipoVar=='l')? 'f' : 'g', 
+                                                a.tipoVar, a.addr); fprintf(f, "storen\n");}
+
+
+            | Var'[' Exp ']' '[' Exp ']' '=' Exp  {Endereco a = getEndereco($1.var_nome); fprintf(f, "push%cp \n push%c %d padd\n",(a.tipoVar=='l')? 'f' : 'g', 
+                                                a.tipoVar, a.addr);}
             ;
 
 // ------------------------------------ PRINT SCAN ------------------------------------
 
-Print:     PRINT '(' Exp ')'  		//{fprintf(f,"\tpushs \" %s\" \n\twrites\n",$3);}                        
+Print:     PRINT '(' Exp ')'  		{fprintf(f,"writei\n");}                        
             ;
 
-Scan:      SCAN '(' Var')'   		//{fprintf(f,"\tread %s\n\tatoi\n\tstoreg %d",$1,lvars);lvars++; }                                 
+Scan:      SCAN '(' Var')'   		{Endereco a= getEndereco($3.var_nome); fprintf(f,"read\n atoi\n store%c %d\n",a.tipoVar, a.addr);}                                 
             ;
 // ------------------------------------ IF THEN ELSE ------------------------------------
 
-If          :  IF             {total++; push(s,total);}
-			TestExpLog   	{fprintf(f,"JZ endCond%d\n", get(s));}
-			ConjInst  		 {fprintf(f," endCond%d\n", pop(s));}	
+If          :  IF                   {total++; push(s,total);}
+			TestExpLog   	        {fprintf(f,"jz endCond%d\n", get(s));}
+			ConjInst  		        {fprintf(f," endCond%d\n", pop(s));}	
 			Else
             ;
 
@@ -159,21 +174,27 @@ Else        :
 
 // ------------------------------------# WHILE ---------------------------------------------
 
-While       : WHILE TestExpLog ConjInst                                    
+While       : WHILE             {total++; push(s,total); fprintf(f, "ciclo%d: NOP\n", get(s));}
+            TestExpLog          {fprintf(f, "jz endciclo%d\n", get(s)); }
+            ConjInst            {fprintf(f, "jump ciclo%d\n endCiclo%d\n", get(s), get(s));  pop(s); }                                
             ;
 
 // ------------------------------------# DO WHILE ---------------------------------------------
 
-DoWhile     : DO ConjInst WHILE TestExpLog ';'              
+DoWhile     : DO                            {total++; push(s,total); fprintf(f, "ciclo%d: NOP\n", get(s));}    
+            ConjInst WHILE TestExpLog ';'   {fprintf(f, "jz endciclo%d\n jump ciclo%d\n endciclo%d: NOP\n", get(s),get(s),get(s));pop(s);}      
             ;
     
 // ------------------------------------# FOR ---------------------------------------------
 
-For         : FOR ForHeader ConjInst                      
+For         : FOR ForHeader ConjInst     {fprintf(f,"jump ciclo%dA\nendciclo%d\n", get(s), get(s)); pop(s);}                  
             ;
 
-ForHeader   :  '(' ForAtrib ';' ExpLog ';' ForAtrib ')' 
-            ;  
+ForHeader   :  '(' ForAtrib ';'         {total++; push(s,total); fprintf(f,"ciclo%d: nop\n", get(s));}
+             ExpLog ';'                 {fprintf(f,"jz endciclo%d\njump ciclo%dB\nciclo%dA: nop\n", get(s), get(s), get(s));}
+             ForAtrib ')'               {fprintf(f,"jump ciclo%d\nciclo%dB: nop\n", get(s), get(s));}
+            ; 
+
 
 ForAtrib    : Atrib  
             ;
@@ -181,7 +202,7 @@ ForAtrib    : Atrib
 // -----------------------------------------------------------------CALCULO DE EXPRESSOES -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ExpLog 		: Exp 
 			|Exp '=''=' Exp 		{fprintf(f,"equal\n");}
-			|Exp '!''=' Exp
+			|Exp '!''=' Exp         {fprintf(f,"equal\npushi 0\nequal\n");}
 			|Exp '>''=' Exp 		{fprintf(f,"supeq\n");}
 			|Exp '<''=' Exp 		{fprintf(f,"infeq\n");}
 			|Exp '<' Exp 			{fprintf(f,"inf\n");}
@@ -192,21 +213,27 @@ ExpLog 		: Exp
 Exp 		: Termo
 			|Exp '+' Termo  			{fprintf(f,"add\n");}
 			|Exp  '-' Termo 			{fprintf(f,"sub\n");}
-			|Exp '|''|' ExpLog 
+			|Exp '|''|' ExpLog          {fprintf(f, "add\n jz endCond%d:nop\n",get(s));}
 			; 
 
 
 Termo		: Fun
 			| Termo '/' Fun 			{fprintf(f,"div\n");}
 			| Termo '*' Fun 			{fprintf(f,"mul\n");}
-			| Termo '&''&' ExpLog
+			| Termo '&''&' ExpLog       {fprintf(f, "pushi 1\nequal\njz endCond%d: nop\n",get(s));}
 			; 
 
-Fun 	   	: num                       {fprintf(f,"%d", $1);}     
-            | Var  											                         
-            | Var '['Exp ']'                                           
+Fun 	   	: num                       {fprintf(f, "pushi %d\n",$1 );}           
+            | Var  	                    {Endereco a = getEndereco($1.var_nome); fprintf(f, "push%c %d\n",a.tipoVar, a.addr);} 	
+
+            | Var '['Exp ']'            {Endereco a = getEndereco($1.var_nome); 
+                                        fprintf(f, "push%cp\npush%c %d\npadd\n",(a.tipoVar=='l')?'f':'g', a.tipoVar, a.addr);
+                                        fprintf(f, "loadn\n");}  
+
             | Var  '['Exp ']' '['Exp ']'                                      
-            | IdFun '(' FunArgs')' 
+            | IdFun                     {funcaoExiste($1); fprintf(f, "pushi 0\n");}
+            '(' FunArgs')'              {fprintf(f, "call %s\n",$1); fprintf(f, "pop%d\n",numeroArgumentos());}
+
             | '(' Exp ')'                  
             ;                                  
 
@@ -214,8 +241,8 @@ FunArgs     :
             | FunArgs2 
             ;
 
-FunArgs2    : Exp                                
-            | FunArgs2 ',' Exp                 
+FunArgs2    : Exp                   {proximoArgumento(_INTS);}                            
+            | FunArgs2 ',' Exp      {proximoArgumento(_INTS);}             
             ;
 
 TestExpLog  : '(' ExpLog ')'                                        
