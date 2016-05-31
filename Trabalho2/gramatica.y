@@ -76,7 +76,7 @@ ListInst    : Inst
  */
 
 Funcao      : '#' TipoFun IdFun                 {inserFuncao($2,$3);}
-                    '(' ListaArg ')' 
+                    '(' ListaArg ')' 		{decFunArgRefresh();fprintf(f,"%s:NOP\n",$3);}
                     '{' ListaDecla ListInst '}'     {fim();}        
             ;
 
@@ -90,8 +90,8 @@ IdFun 		: id
 ListaArg    :   
             | ListaArg2 ;
 
-ListaArg2   : Tipo Var                            
-            | ListaArg2  ','  Tipo Var         
+ListaArg2   : Tipo Var                            		{decArgumentos($2);}
+            | ListaArg2  ','  Tipo Var         			{decArgumentos($2);}
             ;
 
 Tipo 		: INT                 {$$ =_INTS;} 
