@@ -187,11 +187,27 @@ Posto isto tivemos então de, primeiramente, pensar e desenhar uma linguagem impe
 
 \chapter{Concepção/desenho da Resolução} \label{cdres}
 
-Como representado na figura 1 a estrutura do nosso projeto terá de passar pelo desenvolvimento de um analisador léxico em \textit{Flex} que fará o reconhecimento dos \textit{tokens} que são utilizados no analisador semântico que gera o código \textit{Assembly}.
+O sistema desenvolvido é constituído por 2 modelos pricipais: gramatica.l e gramatica.y, que são respetivamente o analisador léxico e analisador sintático. 
+
+
+O analisador sintático utiliza o ficheiro compilador.h, sendo que este módulo responsável pelo tratamento das variáveis e funções existentes (adicionar/consultar variáveis).
+
+O sistema utiliza também duas estruturas de dados: uma HashMap e uma Stack. A hashmap é utilizada para guardar as variáveis e as funções, enquanto que a stack permite o controlo das labels dos ciclos durante a compilação.
+
+\paragraph{}
+Na Figura \ref{p1:fig:dependencias}, é possível observar as dependências entre os diversos ficheiros, a estrutura do nosso projeto que terá de passar pelo desenvolvimento de um analisador léxico em \textit{Flex} que fará o reconhecimento dos \textit{tokens} que são utilizados no analisador semântico que gera o código \textit{Assembly}.
+
+
+\begin{figure}[<+htpb+>]
+	\centering
+	\includegraphics[scale=0.6]{grafodependencias}
+	\caption{Esquema de dependências dos ficheiros }
+	\label{p1:fig:dependencias}
+\end{figure}
+
 
 
 \section{Desenho da Linguagem}
-
 
 O analisador léxico encontra-se desenvolvido com o suporte da ferramenta 'ylex' e deteta todos os símbolos terminais da linguagem (palavras reservadas, sinais e variáveis). Este analisador efetua também a deteção de comentários (linhas precedidas pelos símbolos '//'), ignorando o texto neles contidos. De forma a facilitar a deteção os erros de sintaxe, o parser conta as linhas que já interpretou. Este funcionalidade permite ao analisador sintático informar a linha onde ocorrer a anomalia em caso de erro de processamento. 
 
@@ -208,7 +224,7 @@ Previamente à definição das produções, estão definidos os diversos tokens assim 
 
 \item[Produções iniciais] \hfill \\
 
-O processamento é iniciado na produção Prog, correspondente ao começo do programa. São realizadas as inserções iniciais no ficheiro de output, e as produções a serem efetuadas podem consistir numa lista de declarações, numa lista de funções, ou numa lista de instruções. Caso se encontre uma lista de declarações, é realizado o controlo de saltos de instruções, através da inserção da instrução "JUMP init" no ficheiro de output. Isto possibilita a declaração de variáveis antes da declaração das funções, de forma a que as funções possuam acesso às variáveis globais declaradas.  
+O processamento é iniciado na produção Prog, correspondente ao começo do programa. São realizadas as inserções iniciais no ficheiro de output, e as produções a serem efetuadas podem consistir numa lista de declarações, numa lista de funções, ou numa lista de instruções. Caso se encontre uma lista de declarações, é realizado o controlo de saltos de instruções, através da inserção da instrução "JUMP inicio" no ficheiro de output. Isto possibilita a declaração de variáveis antes da declaração das funções, de forma a que as funções possuam acesso às variáveis globais declaradas.  
 
 \item[Produções de Funções] \hfill \\
 
@@ -216,11 +232,11 @@ A declaração de funções é precedida pelo símbolo terminal '\#', de forma a facil
 
 \item[Produções de declarações] \hfill \\
 
-As declarações de variáveis podem ocorrer dentro do contexto de uma função (i.e. variáveis locais) ou fora de qualquer contexto (i.e. variáveis globais). Desta forma, ao declarar uma variável, é efetuada o teste que verifica se está está declarada ou não dentro de uma função. Além disso, não é permitido re-declarar variáveis locais com o mesmo nome que variáveis globais já existentes, sendo apresentado um erro quando isso ocorre.
+As declarações de variáveis podem ocorrer dentro de uma função (i.e. variáveis locais) ou fora de qualquer contexto (i.e. variáveis globais). Desta forma, ao declarar uma variável, é efetuada o teste que verifica se está está declarada ou não dentro de uma função. Além disso, não é permitido re-declarar variáveis locais com o mesmo nome que variáveis globais já existentes, sendo apresentado um erro quando isso ocorre.
 
 \item[Produções de instruções e atribuições] \hfill \\
 
-São suportadas diversas instruções, no entanto vale a pena mencionar a instrução "return". Esta instrução calcula o endereço a retornar a partir do número de argumentos de entrada da função na qual se insere e do frame pointer (fp) salvaguardado. As atribuições permitem efetuar o incremento/decremento de variáveis através da sintaxe var++/var--, assim como atribuir o valor de expressões a variáveis escalares ou vetoriais. 
+São suportadas diversas instruções, no entanto vale a pena mencionar a instrução "return". Esta instrução calcula o endereço a retornar a partir do número de argumentos de entrada da função na qual se insere e do frame pointer (fp) salvaguardado. As atribuições permitem efetuar o incremento/decremento de variáveis através da sintaxe vars++/vars--, assim como atribuir o valor de expressões a variáveis escalares ou vetoriais. 
 \item[Produções de input/output] \hfill \\
 
 As produções referentes à leitura e escrita no stdin. A produção de escrita suporta a impressão de expressões, sendo que a produção de leitura armazena as variáveis atribuídas conforme o contexto definido. 
@@ -231,7 +247,7 @@ A instrução de controlo de fluxo de execução condicional está definida como if..
 
 \item[Produções de controlo de fluxo de execução cíclico] \hfill \\
 
-As produções correspondentes ao controlo de fluxo de execução cíclico suportam ciclos 'while', 'do while' e 'for'. Estas produções são suportadas por uma estrutura de dados (stack), sendo graças a esta que é possível calcular o saltos a efetuar.
+As produções correspondentes ao controlo de fluxo de execução cíclico suportam ciclos 'while', 'do while' e 'for'. Estas produções são suportadas por uma estrutura de dados (stack), sendo esta a que torna possível calcular os saltos a efetuar.
 
 \item[Produções de cálculo de expressões] \hfill \\
 
@@ -408,17 +424,50 @@ FunArgs2    : Exp
 
 TestExpLog  : '(' ExpLog ')'                                        
             ;
-
-
-
 \end{verbatim}
-
 
 
 \section{Geração de Pseudo-Código Assembly}\label{assembly}
 
-A cada regra da gramática, são associadas ações a serem executadas à medida que estas são reconhecidas. Assim sendo, é realizada uma tradução da linguagem desenvolvida para a linguagem \emph{assembly} da VM, à medida que cada instrução ou expressão é identificada. A maioria destas ações implica uma instrução de escrita no ficheiro de output. Todas estas acções que implicam escrita no ficheiro são triviais, existindo apenas algumas exceções como o caso do ciclo 'for'.
+Para gerar o código Assembly do programa é necessário definir ações semânticas no \textit{YACC}. Estas ações semânticas são blocos de código C que são executados aquando o reconhecimento da expressão que os antecede. Assim sendo, é realizada uma tradução da linguagem desenvolvida para a linguagem \emph{assembly} da VM, à medida que cada instrução ou expressão é identificada.
+
+\subsection{Declaração das variáveis}
+\paragraph{}
+
+Na parte das declarações de variáveis é necessário inseri-las na estrutura que críamos e gerar o código Assembly para alocar memória para elas. Para isso decidimos usar variáveis globais para guardar o tamanho, o endereço, o tipo e o nome de uma variável. Sempre que o analisador sintático  reconhece uma declaração de um inteiro coloca a variável correspondente a 1 e se reconhecer um \textit{array} coloca nessa mesma variável o seu tamanho. Da mesma forma é atualizada a variável correspondente ao tipo.
+
+\paragraph{}
+Quanto à variável correspondente ao endereço é uma variável global com valor inicial de zero que é incrementada sempre que uma nova variável é adicionada com sucesso à estrutura. Quando é encontrado o nome de uma variável já tem então guardado o seu tamanho e tipo e encontra-se já em condições de guardá-la na estrutura de dados. Nesta altura é feita a verificação da já existência de uma variável com o mesmo nome ou não. Caso já exista o programa termina e é gerada uma mensagem de erro. Caso contrário é gerado o código Assembly para empilhar a variável na \textit{Stack}: PUSHN X, em que X é o tamanho da variável. De seguida é incrementada a variável do endereço tantas vezes quanto o tamanho da variável.
+\subsection{Inicio do programa e variáveis }
+\paragraph{}
+Após todas as declarações terem sido reconhecidas é gerada a instrução Assembly START que indica o início das instruções do programa.
+
+\paragraph{}
+Em todas as instruções, sempre que é encontrada uma variável é feita a verificação da sua existência na estrutura. Se não existir o programa termina com um erro. Se existir, é guardado o seu registo para ser utilizado no código Assembly. No caso de se tratar de um acesso a uma posição de um \textit{array} é também feita a verificação do seu tipo.
+
+
+\subsection{Atribuição e operações lógicas}
+\paragraph{}
+Nas instruções de atribuição o código Assembly gerado, no caso de ser uma variável inteira escalar, é apenas um STOREG X, em que X é o endereço da variável em questão. No caso de ser um acesso a um vetor, é necessário aquando do reconhecimento do nome da variável efetuar um PUSHGP seguido de um PUSHI X, em que X é o endereço da variável em causa, e de um PADD. De seguida, após o reconhecimento das expressões constituintes da atribuição é gerado um STOREN.\\
+
+
+Para as expressões, termos e condições que utilizam operadores aditivos, multiplicativos e relacionais, respetivamente, foi feito o reconhecimento de que operador estava a ser utilizado, e tendo em conta isso gerado o código Assembly respetivo a essa operação. De notar que não existe uma instrução Assembly para as operações lógicas e e ou, logo utilizamos a multiplicação e a soma, respetivamente, para representá-las.\\
+
+\subsection{Escrita}
+\paragraph{}
+Para as instruções de escrita o único código Assembly necessário é um WRITEI.\\
+Para as instruções de leitura, no caso de a leitura ser feita para uma variável escalar, é gerado o código READ para ler uma\textit{string} do teclado, seguido do código ATOI para transformá-la num inteiro, e de seguida guardá-la no endereço da variável em questão com a instrução STOREG X, em que X é o endereço. Já no caso de se tratar de um vetor é necessário um PUSHGP seguido de um PUSHIX e de um PADD antes de proceder à leitura em si, que se dá da mesma forma que no caso do escalar, mas substituindo o STOREG por um STOREN.\\
+
+\subsection{Condicional}
+Quando às instruções condicionais, recorrendo também às \textit{labels}, e aos \textit{jumps} seguimos a seguinte lógica: após a condição do \textit{if} temos um JZ para o início do bloco \textit{else} caso este exista e para o fim do \textit{if} caso contrário.
+
+
+\subsection{Ciclos}
+No caso dos ciclos utilizamos \textit{labels} para marcar o início e o fim de um ciclo. Depois de reconhecida a expressão da condição do ciclo fazemos um JZ (salta se a expressão for falsa) para a \textit{label} do fim de ciclo. No fim do ciclo temos um JUMP não condicional que salta sempre para o início do ciclo (antes da condição).\\
+
+
 No ciclo 'for', é necessária a utilização de instruções 'JUMP', de forma a ser possível seguir o seu fluxo de execução normal. Após a identificação e execução das ações associadas à expressão lógica presente no ciclo 'for', é gerado o salto condicional respetivo, assim como um salto para as instruções associadas ao corpo do ciclo. Além disso, é gerada uma \emph{label} que irá corresponder ao incremento do ciclo que irá ser identificado de seguida. Identificado o final do corpo do ciclo, é efetuado um salto para a \emph{label} correspondente ao incremento do ciclo, que para além das respetivas instruções, conterá outro 'JUMP' para o teste da expressão lógica.
+
 
 \subsection{Funções}
 
@@ -426,38 +475,12 @@ De forma a implementar adequadamente o processamento de funções, é necessário re
 
 As declarações das funções são efetuadas após as declarações das variáveis globais para que dentro das funções seja possível aceder às variáveis globais.
 
-As declarações de variáveis são feitas no inicio da função, e no hash table das variáveis é guardado não apenas o endereço mas também o contexto (local ou global). Desta forma, no acesso às variáveis, utiliza-se 'PUSHG' ou 'PUSHL' seja respetivamente variável global ou local.
+As declarações de variáveis são feitas no inicio da função, e no hashtable das variáveis é guardado não apenas o endereço mas também o contexto (local ou global). Desta forma, no acesso às variáveis, utiliza-se 'PUSHG' ou 'PUSHL' seja respetivamente variável global ou local.
 
 A passagem de argumentos para a função é tratada como uma declaração especial na qual o endereço é negativo. Já o retorno da função é colocado também num endereço negativo que foi previamente alocado na chamada da função.
 
-Em forma de exemplo, assumindo a chamada de uma função com 2 argumentos. Como é possível observar na figura  os endereços são negativos ao fp, e o endereço onde a função colocará o retorno é $fp - 3$.
+Em forma de exemplo, assumindo a chamada de uma função com 2 argumentos, os endereços são negativos ao fp, e o endereço onde a função colocará o retorno é $fp - 3$.
 Após a execução da função é feito o 'pop' dos argumentos e assim o valor de retorno da função está no topo da stack. 
-
-\large \textbf{ooolllaaa}
-
-\paragraph{}
-
-Para gerar o código Assembly do programa é necessário definir ações semânticas no \textit{YACC}. Estas ações semânticas são blocos de código C que são executados aquando o reconhecimento da expressão que os antecede.\\
-Na parte das declarações de variáveis é necessário inseri-las na estrutura que críamos e gerar o código Assembly para alocar memória para elas. Para isso decidimos usar variáveis globais para guardar o tamanho, o endereço, o tipo e o nome de uma variável. Sempre que o analisador sintático  reconhece uma declaração de um inteiro coloca a variável correspondente a 1 e se reconhecer um \textit{array} coloca nessa mesma variável o seu tamanho. Da mesma forma é atualizada a variável correspondente ao tipo. Quanto à variável correspondente ao endereço é uma variável global com valor inicial de zero que é incrementada sempre que uma nova variável é adicionada com sucesso à estrutura. Quando é encontrado o nome de uma variável já tem então guardado o seu tamanho e tipo e encontra-se já em condições de guardá-la na estrutura de dados. Nesta altura é feita a verificação da já existência de uma variável com o mesmo nome ou não. Caso já exista o programa termina e é gerada uma mensagem de erro. Caso contrário é gerado o código Assembly para empilhar a variável na \textit{Stack}: PUSHN X, em que X é o tamanho da variável. De seguida é incrementada a variável do endereço tantas vezes quanto o tamanho da variável. \\
-
-Após todas as declarações terem sido reconhecidas é gerada a instrução Assembly START que indica o início das instruções do programa.\\
-Em todas as instruções, sempre que é encontrada uma variável é feita a verificação da sua existência na estrutura. Se não existir o programa termina com um erro. Se existir, é guardado o seu registo para ser utilizado no código Assembly. No caso de se tratar de um acesso a uma posição de um \textit{array} é também feita a verificação do seu tipo.\\
-Nas instruções de atribuição o código Assembly gerado, no caso de ser uma variável inteira escalar, é apenas um STOREG X, em que X é o endereço da variável em questão. No caso de ser um acesso a um vetor, é necessário aquando do reconhecimento do nome da variável efetuar um PUSHGP seguido de um PUSHI X, em que X é o endereço da variável em causa, e de um PADD. De seguida, após o reconhecimento das expressões constituintes da atribuição é gerado um STOREN.\\
-
-
-Para as expressões, termos e condições que utilizam operadores aditivos, multiplicativos e relacionais, respetivamente, foi feito o reconhecimento de que operador estava a ser utilizado, e tendo em conta isso gerado o código Assembly respetivo a essa operação. De notar que não existe uma instrução Assembly para as operações lógicas e e ou, logo utilizamos a multiplicação e a soma, respetivamente, para representá-las.\\
-
-
-Para as instruções de escrita o único código Assembly necessário é um WRITEI.\\
-Para as instruções de leitura, no caso de a leitura ser feita para uma variável escalar, é gerado o código READ para ler uma\textit{string} do teclado, seguido do código ATOI para transformá-la num inteiro, e de seguida guardá-la no endereço da variável em questão com a instrução STOREG X, em que X é o endereço. Já no caso de se tratar de um vetor é necessário um PUSHGP seguido de um PUSHIX e de um PADD antes de proceder à leitura em si, que se dá da mesma forma que no caso do escalar, mas substituindo o STOREG por um STOREN.\\
-
-
-No caso dos ciclos utilizamos \textit{labels} para marcar o início e o fim de um ciclo. Depois de reconhecida a expressão da condição do ciclo fazemos um JZ (salta se a expressão for falsa) para a \textit{label} do fim de ciclo. No fim do ciclo temos um JUMP não condicional que salta sempre para o início do ciclo (antes da condição).\\
-
-
-
-Quando às instruções condicionais, recorrendo também às \textit{labels}, e aos \textit{jumps} seguimos a seguinte lógica: após a condição do \textit{if} temos um JZ para o início do bloco \textit{else} caso este exista e para o fim do \textit{if} caso contrário. 
-\section{Módulos da Aplicação}\label{modulos}
 
 
 \section{Estruturas de Dados}
@@ -530,16 +553,378 @@ clean:
 Finalizado o desenvolvimento do trabalho, é possível analisar o resultado final e o impacto que as diversas decisões tiveram sobre este. Um dos principais pontos positivos consiste na implementação do processamento e compilação de funções, sendo esta a funcionalidade mais trabalhosa e sobre a qual recaiu maior parte do tempo despendido. Relativamente a estas, de notar uma mudança na forma como estas foram implementadas. Anteriormente, a estrutura relativa ao armazenamento de dados de uma função possuía a capacidade de dar acesso às variáveis declaradas dentro do seu contexto, no entanto decidiu-se que esta funcionalidade era desnecessária para o funcionamento do compilador, sendo esta informação descartada. A implementação das expressões de controlo de execução possuíram também uma dificuldade acrescida, obrigando à utilização de estruturas de dados mais complexas, tais como hashmaps e stacks. Creemos ter alcançado os objetivos definidos aquando da proposta do trabalho, tendo desenvolvido um compilador capaz de processar uma LPIS, com a possibilidade de dar feedback sobre o código de input definido e criar o ficheiro com instruções em Assembly correspondentes.
 
 
+
 \appendix
+\chapter{Código Flex}
+\lstinputlisting{gramatica.l} 
+\chapter{Código Yacc}
+\begin{verbatim}
+%{ 
+#include "compilador.h"
+#include <stdio.h>
+#include <string.h>
+#include "stack.h"
+#include <stdlib.h>
+#include "y.tab.h"
+
+extern ccLine;
+static int total;
+FILE *f;
+static Stack s;
+
+%}
+
+%union{
+char* var_nome;
+int valor;
+Tipo tipo;
+struct sVarAtr
+{
+char* var_nome;
+int valor;
+int size;
+} varAtr;   
+}
+
+
+%token INT WHILE FOR IF ELSE RETURN VOID PRINT SCAN DO
+%token <valor>num 
+%token <var_nome>id 
+
+%type <tipo> TipoFun
+%type <tipo> Tipo
+%type <var_nome> IdFun
+%type <varAtr> Var
+
+
+
+
+// --------------------PROGRAMA ------------------------------------
+/**
+Um programa é uma lista de declarações, lista de Funcões , e uma lista de Instruções 
+*/
+
+%%
+
+Prog       :                    
+ListaDecla          {fprintf(f,"start\n");fprintf(f,"jump inicio\n");}	 	
+ListaFun 			{fprintf(f,"inicio:nop\n");}        		
+ListInst    		{fprintf(f,"stop\n");}                                                         
+
+; 
+
+ListaDecla  :                            
+| ListaDecla Decla 
+;
+
+ListaFun    :   
+| ListaFun Funcao 
+;
+
+ListInst    : Inst                               
+| ListInst Inst                                    
+;
+
+// --------------------  FUNCAO ------------------------------------
+/** A declaração de funções é precedida pelo símbolo terminal '\#'. 
+*/
+
+Funcao      : '#' TipoFun IdFun                 {inserFuncao($2,$3);}
+'(' ListaArg ')' 
+'{' ListaDecla ListInst '}'     {fim();}        
+;
+
+TipoFun     : VOID      	        {$$ =_VOID;}              
+| INT                   {$$ =_INTS;}        
+;  
+
+IdFun 		: id 
+;
+
+ListaArg    :   
+| ListaArg2 ;
+
+ListaArg2   : Tipo Var                            
+| ListaArg2  ','  Tipo Var         
+;
+
+Tipo 		: INT                 {$$ =_INTS;} 
+; 
+
+
+// --------------------DECLARACAO ------------------------------------
+
+Decla       : INT id ';'                               {decVar($2,1,'S');fprintf(f,"pushi 0\n"); vars++; }   			                
+| INT id '[' num ']' ';'                   {if(testeColuna($4)==1) 
+{decVar($2,$4,'A');fprintf(f,"pushn%d\n",$4);}
+else {yyerror("Tamanho menor que 1");}
+}
+| INT id '[' num ']' '[' num ']' ';'       {if(testeMatriz($4,$7)==1) 
+{decVar($2,$4*$7,'M');fprintf(f,"pushn %d\n",$4*$7);}
+else {yyerror("Tamanho menor que 1");}        
+}  
+
+;
+
+
+Var 		: id                                      {Endereco a=getEndereco($1); $$.var_nome=strdup($1); $$.valor=1;}
+;
+
+// --------------------INSTRUCAO ------------------------------------
+
+ConjInst    :                                       
+|'{' ListInst '}'                   
+;
+
+Inst        : If                                                                  
+| While                                     
+| DoWhile
+| For                                       
+| Atrib ';'                                 
+| Print';' 							                               
+| Scan ';'                                 
+| RETURN Exp ';'     {fprintf(f,"storel %d\n",decFunRetAddr());fprintf(f,"return\n");}
+| ELSE               { yyerror("'Else' sem um 'If' anteriormente");return 0;}                          
+;
+
+// ------------------------------------ ATRIBUIÇAO ------------------------------------
+
+Atrib       : Var '=' Exp                       {Endereco a = getEndereco($1.var_nome); 
+if(a.tipo == _INTS){ fprintf(f,"store%c %d\n",a.tipoVar, a.addr);} 
+else {yyerror("Tipos incompativeis");return 0;  }  
+} 
+
+| Var '+''+'                        {Endereco a = getEndereco($1.var_nome); 
+if(a.tipo ==_INTS){fprintf(f,"pushi 1\n push%c %d\n add\n store%c %d\n",a.tipoVar,a.addr, a.tipoVar, a.addr);}
+else{yyerror("Tipos incompativeis"); return 0; } 
+}    
+
+| Var'[' Exp ']' '=' Exp            {Endereco a = getEndereco($1.var_nome); fprintf(f, "push%cp \n push%c %d padd\n",(a.tipoVar=='l')? 'f' : 'g', 
+a.tipoVar, a.addr); fprintf(f, "storen\n");}
+
+
+| Var'[' Exp ']' '[' Exp ']' '=' Exp  {Endereco a = getEndereco($1.var_nome); fprintf(f, "push%cp \n push%c %d padd\n",(a.tipoVar=='l')? 'f' : 'g', 
+a.tipoVar, a.addr);}
+;
+
+// ------------------------------------ PRINT SCAN ------------------------------------
+
+Print:     PRINT '(' Exp ')'  		{fprintf(f,"writei\n");}                        
+;
+
+Scan:      SCAN '(' Var')'   		{Endereco a= getEndereco($3.var_nome); fprintf(f,"read\n atoi\n store%c %d\n",a.tipoVar, a.addr);}                                 
+;
+// ------------------------------------ IF THEN ELSE ------------------------------------
+
+If          :  IF                   {total++; push(s,total);}
+TestExpLog   	        {fprintf(f,"jz endCond%d\n", get(s));}
+ConjInst  		        {fprintf(f," endCond%d\n", pop(s));}	
+Else
+;
+
+Else        :       
+| ELSE ConjInst 
+;
+
+// ------------------------------------# WHILE ---------------------------------------------
+
+While       : WHILE             {total++; push(s,total); fprintf(f, "ciclo%d: NOP\n", get(s));}
+TestExpLog          {fprintf(f, "jz endciclo%d\n", get(s)); }
+ConjInst            {fprintf(f, "jump ciclo%d\n endCiclo%d\n", get(s), get(s));  pop(s); }                                
+;
+
+// ------------------------------------# DO WHILE ---------------------------------------------
+
+DoWhile     : DO                            {total++; push(s,total); fprintf(f, "ciclo%d: NOP\n", get(s));}    
+ConjInst WHILE TestExpLog ';'   {fprintf(f, "jz endciclo%d\n jump ciclo%d\n endciclo%d: NOP\n", get(s),get(s),get(s));pop(s);}      
+;
+
+// ------------------------------------# FOR ---------------------------------------------
+
+For         : FOR ForHeader ConjInst     {fprintf(f,"jump ciclo%dA\nendciclo%d\n", get(s), get(s)); pop(s);}                  
+;
+
+ForHeader   :  '(' ForAtrib ';'         {total++; push(s,total); fprintf(f,"ciclo%d: nop\n", get(s));}
+ExpLog ';'                 {fprintf(f,"jz endciclo%d\njump ciclo%dB\nciclo%dA: nop\n", get(s), get(s), get(s));}
+ForAtrib ')'               {fprintf(f,"jump ciclo%d\nciclo%dB: nop\n", get(s), get(s));}
+; 
+
+
+ForAtrib    : Atrib  
+;
+
+// -----------------------------------------------------------------CALCULO DE EXPRESSOES -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ExpLog 		: Exp 
+|Exp '=''=' Exp 		{fprintf(f,"equal\n");}
+|Exp '!''=' Exp         {fprintf(f,"equal\npushi 0\nequal\n");}
+|Exp '>''=' Exp 		{fprintf(f,"supeq\n");}
+|Exp '<''=' Exp 		{fprintf(f,"infeq\n");}
+|Exp '<' Exp 			{fprintf(f,"inf\n");}
+|Exp '>' Exp 			{fprintf(f,"sup\n");}
+; 
+
+
+Exp 		: Termo
+|Exp '+' Termo  			{fprintf(f,"add\n");}
+|Exp  '-' Termo 			{fprintf(f,"sub\n");}
+|Exp '|''|' ExpLog          {fprintf(f, "add\n jz endCond%d:nop\n",get(s));}
+; 
+
+
+Termo		: Fun
+| Termo '/' Fun 			{fprintf(f,"div\n");}
+| Termo '*' Fun 			{fprintf(f,"mul\n");}
+| Termo '&''&' ExpLog       {fprintf(f, "pushi 1\nequal\njz endCond%d: nop\n",get(s));}
+; 
+
+Fun 	   	: num                       {fprintf(f, "pushi %d\n",$1 );}           
+| Var  	                    {Endereco a = getEndereco($1.var_nome); fprintf(f, "push%c %d\n",a.tipoVar, a.addr);} 	
+
+| Var '['Exp ']'            {Endereco a = getEndereco($1.var_nome); 
+fprintf(f, "push%cp\npush%c %d\npadd\n",(a.tipoVar=='l')?'f':'g', a.tipoVar, a.addr);
+fprintf(f, "loadn\n");}  
+
+| Var  '['Exp ']' '['Exp ']'                                      
+| IdFun                     {funcaoExiste($1); fprintf(f, "pushi 0\n");}
+'(' FunArgs')'              {fprintf(f, "call %s\n",$1); fprintf(f, "pop%d\n",numeroArgumentos());}
+
+| '(' Exp ')'                  
+;                                  
+
+FunArgs     :    
+| FunArgs2 
+;
+
+FunArgs2    : Exp                   {proximoArgumento(_INTS);}                            
+| FunArgs2 ',' Exp      {proximoArgumento(_INTS);}             
+;
+
+TestExpLog  : '(' ExpLog ')'                                        
+;
+
+
+%%
+
+int testeMatriz(int linha, int coluna) {
+
+if(linha<=0) {
+
+return -1;
+}
+
+else {
+if(coluna<=0) {
+
+
+return -1;
+
+}
+
+else return 1;
+
+
+}
+}
+
+int testeColuna(int linha) {
+
+if(linha<=0) {
+
+return -1;
+}
+
+else return 1;
+}
+
+
+
+#include "lex.yy.c"
+
+
+
+/*
+int yyerror(char* s) {
+printf("\n\x1b[10;01m%s (line %d) \x1b[0m\n", s, yylineno);
+return 0;
+}
+*/
+
+
+int yyerror(char *s) {
+
+fprintf(stderr,"ERRO: Syntax LINHA: %d MSG: %s\n",ccLine,s);
+return 0;
+}
+
+
+/*
+
+int  yyerror(char *s){
+fprintf(stderr,"ERRO: Syntax LINHA: %d MSG: %s\n",ccLine,s);
+exit(0);
+return 0; 
+}
+
+*/
+
+/*
+
+void inicio()
+{
+s = initStack();
+total = 0;
+f = fopen("assembly.out", "w");
+}
+*/
+
+
+int main(int argc, char* argv[]){
+total=0; 
+lvars=0;
+vars=0;
+initVGlobalMap(); 
+s=initStack();
+
+f=fopen("assembly.txt","w+");
+yyparse();
+fclose(f); 
+free(s);
+return 0; 
+}
+
+\end{verbatim}
+
 \chapter{Código do Programa}
+\begin{verbatim}
+#ifndef __COMPILADOR_H__
+#define __COMPILADOR_H__
 
-Lista-se a seguir o código flex ------- gramatica.l  
+typedef struct variavel *Variavel;
 
+typedef struct funcao *Funcao;
 
+typedef enum eTipo{_VOID,_INTS,_INTA,_INTM}Tipo;
 
-Lista-se a seguir o código yacc ------ gramatica.y
+typedef struct sEndereco{
+int addr;
+char tipoVar;
+Tipo tipo;
+} Endereco;
 
+int initVGlobalMap();
+Funcao existeFuncao(char * func);
+int inserFuncao(Tipo tipo,char * name);
+int decVar(char* varName, int linha,char tipo);
+int decArgumentos(char * nome);
+int funcaoExiste(char * nome);
+int proximoArgumento(Tipo type);
+int numeroArgumentos();
+void fim();
+void decFunArgRefresh();
+int decFunRetAddr();
 
+Endereco getEndereco(char * varName);
+\end{verbatim}
 
 
 \bibliographystyle{alpha}
