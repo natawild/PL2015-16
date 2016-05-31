@@ -250,7 +250,7 @@ Os símbolos não-terminais da gramática que definimos são os seguintes: prog, Lis
 
 
 
-Por sua vez os símbolos terminais são: INT, WHILE, FOR, IF, ELSE, RETURN, VOID, PRINT, SCAN, DO, num, id  ";", , "(",")", "{", "}" , "=", "#", "[", "]", ">", "<". 
+Por sua vez os símbolos terminais são: INT, WHILE, FOR, IF, ELSE, RETURN, VOID, PRINT, SCAN, DO, num, id  ";", , "(",")", "{", "}" , "=", "\#", "[", "]", ">", "<". 
 
 Na concepção da nossa gramática utilizamos em todos os casos recursividade à esquerda.
 Segue-se então a gramática gerada:
@@ -433,17 +433,29 @@ A passagem de argumentos para a função é tratada como uma declaração especial na
 Em forma de exemplo, assumindo a chamada de uma função com 2 argumentos. Como é possível observar na figura  os endereços são negativos ao fp, e o endereço onde a função colocará o retorno é $fp - 3$.
 Após a execução da função é feito o 'pop' dos argumentos e assim o valor de retorno da função está no topo da stack. 
 
+\large \textbf{ooolllaaa}
 
+\paragraph{}
 
 Para gerar o código Assembly do programa é necessário definir ações semânticas no \textit{YACC}. Estas ações semânticas são blocos de código C que são executados aquando o reconhecimento da expressão que os antecede.\\
 Na parte das declarações de variáveis é necessário inseri-las na estrutura que críamos e gerar o código Assembly para alocar memória para elas. Para isso decidimos usar variáveis globais para guardar o tamanho, o endereço, o tipo e o nome de uma variável. Sempre que o analisador sintático  reconhece uma declaração de um inteiro coloca a variável correspondente a 1 e se reconhecer um \textit{array} coloca nessa mesma variável o seu tamanho. Da mesma forma é atualizada a variável correspondente ao tipo. Quanto à variável correspondente ao endereço é uma variável global com valor inicial de zero que é incrementada sempre que uma nova variável é adicionada com sucesso à estrutura. Quando é encontrado o nome de uma variável já tem então guardado o seu tamanho e tipo e encontra-se já em condições de guardá-la na estrutura de dados. Nesta altura é feita a verificação da já existência de uma variável com o mesmo nome ou não. Caso já exista o programa termina e é gerada uma mensagem de erro. Caso contrário é gerado o código Assembly para empilhar a variável na \textit{Stack}: PUSHN X, em que X é o tamanho da variável. De seguida é incrementada a variável do endereço tantas vezes quanto o tamanho da variável. \\
+
 Após todas as declarações terem sido reconhecidas é gerada a instrução Assembly START que indica o início das instruções do programa.\\
 Em todas as instruções, sempre que é encontrada uma variável é feita a verificação da sua existência na estrutura. Se não existir o programa termina com um erro. Se existir, é guardado o seu registo para ser utilizado no código Assembly. No caso de se tratar de um acesso a uma posição de um \textit{array} é também feita a verificação do seu tipo.\\
 Nas instruções de atribuição o código Assembly gerado, no caso de ser uma variável inteira escalar, é apenas um STOREG X, em que X é o endereço da variável em questão. No caso de ser um acesso a um vetor, é necessário aquando do reconhecimento do nome da variável efetuar um PUSHGP seguido de um PUSHI X, em que X é o endereço da variável em causa, e de um PADD. De seguida, após o reconhecimento das expressões constituintes da atribuição é gerado um STOREN.\\
+
+
 Para as expressões, termos e condições que utilizam operadores aditivos, multiplicativos e relacionais, respetivamente, foi feito o reconhecimento de que operador estava a ser utilizado, e tendo em conta isso gerado o código Assembly respetivo a essa operação. De notar que não existe uma instrução Assembly para as operações lógicas e e ou, logo utilizamos a multiplicação e a soma, respetivamente, para representá-las.\\
+
+
 Para as instruções de escrita o único código Assembly necessário é um WRITEI.\\
 Para as instruções de leitura, no caso de a leitura ser feita para uma variável escalar, é gerado o código READ para ler uma\textit{string} do teclado, seguido do código ATOI para transformá-la num inteiro, e de seguida guardá-la no endereço da variável em questão com a instrução STOREG X, em que X é o endereço. Já no caso de se tratar de um vetor é necessário um PUSHGP seguido de um PUSHIX e de um PADD antes de proceder à leitura em si, que se dá da mesma forma que no caso do escalar, mas substituindo o STOREG por um STOREN.\\
+
+
 No caso dos ciclos utilizamos \textit{labels} para marcar o início e o fim de um ciclo. Depois de reconhecida a expressão da condição do ciclo fazemos um JZ (salta se a expressão for falsa) para a \textit{label} do fim de ciclo. No fim do ciclo temos um JUMP não condicional que salta sempre para o início do ciclo (antes da condição).\\
+
+
+
 Quando às instruções condicionais, recorrendo também às \textit{labels}, e aos \textit{jumps} seguimos a seguinte lógica: após a condição do \textit{if} temos um JZ para o início do bloco \textit{else} caso este exista e para o fim do \textit{if} caso contrário. 
 \section{Módulos da Aplicação}\label{modulos}
 
