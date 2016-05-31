@@ -5,19 +5,12 @@
 #include "stack.h"
 #include <stdlib.h>
 #include "y.tab.h"
-
-
-
-
 extern ccLine;
 static int total;
 FILE *f;
 static Stack s;
-
 int vars; 
 int lvars; 
-
-
 %}
 
 %union{
@@ -76,9 +69,9 @@ ListInst    : Inst
  */
 
 Funcao      : '#' TipoFun IdFun                 {inserFuncao($2,$3);}
-                    '(' ListaArg ')' 		{decFunArgRefresh();fprintf(f,"%s:NOP\n",$3);}
-                    '{' ListaDecla ListInst '}'     {fim();}        
-            ;
+                    '(' ListaArg ')'        {decFunArgRefresh();fprintf(f,"%s:NOP\n",$3);}
+                    '{' ListaDecla ListInst '}'     {fim();}
+            ;            
 
 TipoFun     : VOID      	        {$$ =_VOID;}              
             | INT                   {$$ =_INTS;}        
@@ -90,8 +83,8 @@ IdFun 		: id
 ListaArg    :   
             | ListaArg2 ;
 
-ListaArg2   : Tipo Var                            		{decArgumentos($2);}
-            | ListaArg2  ','  Tipo Var         			{decArgumentos($2);}
+ListaArg2   : Tipo Var                                  {decArgumentos($2.var_nome);}
+            | ListaArg2  ','  Tipo Var                  {decArgumentos($4.var_nome);}
             ;
 
 Tipo 		: INT                 {$$ =_INTS;} 
@@ -105,6 +98,9 @@ Decla       : INT id ';'                               {decVar($2,1,'S');fprintf
                                                                 {decVar($2,$4,'A');fprintf(f,"pushn%d\n",$4);}
                                                                 else {yyerror("Tamanho menor que 1");}
                                                             }
+            | INT id '[' Var ']' ';'                   {Endereco a = getEndereco($4.var_nome); 
+                                                        fprintf(f, "pushn %d\n", a.addr);
+                                                        decVar($2,a.addr,'A');}                                     
             | INT id '[' num ']' '[' num ']' ';'       {if(testeMatriz($4,$7)==1) 
                                                                 {decVar($2,$4*$7,'M');fprintf(f,"pushn %d\n",$4*$7);}
                                                                 else {yyerror("Tamanho menor que 1");}        
@@ -122,7 +118,8 @@ ConjInst    :
             |'{' ListInst '}'                   
             ;
 
-Inst        : If                                                                  
+Inst        : If   
+            | Decla                                                               
             | While                                     
             | DoWhile
             | For                                       
@@ -154,12 +151,24 @@ Atrib       : Var '=' Exp                       {Endereco a = getEndereco($1.var
             ;
 
 // ------------------------------------ PRINT SCAN ------------------------------------
-
-Print:     PRINT '(' Exp ')'  		{fprintf(f,"writei\n");}                        
+ 
+Print       :  PRINT '(' Prints ')'                          
             ;
 
-Scan:      SCAN '(' Var')'   		{Endereco a= getEndereco($3.var_nome); fprintf(f,"read\n atoi\n store%c %d\n",a.tipoVar, a.addr);}                                 
+Scan        : SCAN '(' Var ')'     {Endereco a= getEndereco($3.var_nome); 
+                                    fprintf(f,"read\n atoi\n store%c %d\n",a.tipoVar, a.addr);}       
             ;
+
+Prints      : num                       {fprintf(f, "writei %d\n",$1 );}           
+            | Var                       {Endereco a = getEndereco($1.var_nome); fprintf(f, "push%c %d\nwritei\n",a.tipoVar, a.addr);}   
+
+            | Var '['Exp ']'            {Endereco a = getEndereco($1.var_nome); 
+                                        fprintf(f, "push%cp\npush%c %d\npadd\n",(a.tipoVar=='l')?'f':'g', a.tipoVar, a.addr);
+                                        fprintf(f, "loadn\n");}  
+
+            | Var  '['Exp ']' '['Exp ']' {fprintf(f, "matrix\n");}                                     
+            | id                         {fprintf(f, "pushs %s\nwrites", $1);}
+            ;                    
 // ------------------------------------ IF THEN ELSE ------------------------------------
 
 If          :  IF                   {total++; push(s,total);}
@@ -214,6 +223,7 @@ Exp 		: Termo
 			|Exp '+' Termo  			{fprintf(f,"add\n");}
 			|Exp  '-' Termo 			{fprintf(f,"sub\n");}
 			|Exp '|''|' ExpLog          {fprintf(f, "add\n jz endCond%d:nop\n",get(s));}
+            |Exp '%' Termo              {fprintf(f, "mod\n");}
 			; 
 
 
@@ -225,7 +235,6 @@ Termo		: Fun
 
 Fun 	   	: num                       {fprintf(f, "pushi %d\n",$1 );}           
             | Var  	                    {Endereco a = getEndereco($1.var_nome); fprintf(f, "push%c %d\n",a.tipoVar, a.addr);} 	
-
             | Var '['Exp ']'            {Endereco a = getEndereco($1.var_nome); 
                                         fprintf(f, "push%cp\npush%c %d\npadd\n",(a.tipoVar=='l')?'f':'g', a.tipoVar, a.addr);
                                         fprintf(f, "loadn\n");}  
@@ -337,5 +346,3 @@ int main(int argc, char* argv[]){
         free(s);
 		return 0; 
 	}
-
-
