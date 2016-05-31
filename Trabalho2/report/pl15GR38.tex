@@ -146,15 +146,14 @@ O presente trabalho enquadra-se na unidade curricular de Processamento de Lingua
 Inicialmente é definida uma linguagem de programação imperativa simples, a qual deve permitir manusear variáveis do tipo inteiro assim como realizar operações básicas. As variáveis devem sem declaradas no início do programa e não pode haver re-declarações. Após a validação da linguagem criada com o docente, é desenvolvido um compilador para esta linguagem, com base na GIC criada e com recurso ao Gerador Yacc/Flex. O compilador da linguagem deve gerar pseudo-código Assembly da Máquina Virtual fornecida.
 
 
-\section*{Estrutura do Relatório} \
-Este documentos está dividido em xxxxx partes 
-No capítulo \ref{ae} faz-se uma análise detalhada do problema proposto
-de modo a poder-se especificar  as entradas, resultados e formas de transformação do ficheiro \textit{.bib}. 
+\section*{Estrutura do Relatório}
 
-No capítulo \ref{cdres} serão descritas as estruturas de dados implementadas para a realização do problema descrito. 
-No capítulo \ref{codtestes} serão mostradas as expressões regulares desenvolvidas para a implementação do caso de estudo, assim como os testes realizados e os resultados. 
-No capítulo~\ref{concl} termina-se o relatório com uma síntese do que foi dito,
-as conclusões e o trabalho futuro. No fim do documento estará incluido ficheiros anexos com o código desenvolvido. 
+A elaboração deste documento teve por base a estrutura do relatório fornecida pelo docente. 
+O relatório encontra-se então estruturado da seguinte forma: no Capítulo \ref{intro} é feita uma contextualização ao assunto tratado neste trabalho, seguindo-se uma introdução onde são apresentadas as metas de aprendizagem pretendidas.
+Posteriormente, no Capítulo \ref{ae}, é exposto o enunciado do trabalho e a descrição do problema.\\
+Imediatamente após, no Capítulo \ref{cdres}, é apresentada a linguagem criada, a gramática correspondente e descrita a forma como foi gerado o código Assembly. São também descritos os módulos do programa e as estruturas utilizadas.\\
+No Capítulo \ref{codtestes} são apresentados os testes realizados e os seus resultados.\\
+Por último, no Capítulo \ref{concl}, faz-se uma análise crítica relativa quer ao desenvolvimento do projeto quer ao seu estado final e ainda é feita uma abordagem ao trabalho futuro. No fim do documento estará incluido ficheiros anexos com o código desenvolvido. 
 
 \chapter{Análise e Especificação} \label{ae}
 \section{Descrição informal do problema - Enunciado}
@@ -174,36 +173,14 @@ Apenas deve ter em consideração que a LPIS terá de permitir:
 	\item \emph{definir e invocar subprogramas} sem parâmetros mas que possam retornar um resultado atómico (opcional).
 \end{itemize}
 
-Neste tipo de linguagens, as variáveis deverão ser declaradas no início do
-programa e não pode haver re-declarações, nem utilizações sem declaração prévia.
-Se nada for explicitado, o valor da variável após a declaração é 0 (zero).
+Neste tipo de linguagens, as variáveis deverão ser declaradas no início do programa e não pode haver re-declarações, nem utilizações sem declaração prévia. Se nada for explicitado, o valor da variável após a declaração é 0 (zero).
 
-\paragraph{}
 
-Como descrito acima o desafio que nos foi proposto consiste na criação de uma linguagem imperativa simples apenas com as características mais básicas, o desenvolvimento de uma \textbf{GIC} para a mesma e ainda a criação de um compilador gerador de \textbf{pseudo-código} Assembly, utilizando os recursos ao Gerador YACC/LEX.
-\paragraph{}
+
+\section{Descrição do problema}
+
+Como descrito na secção anterior o desafio que nos foi proposto consiste na criação de uma linguagem imperativa simples apenas com as características mais básicas, o desenvolvimento de uma \textbf{GIC} para a mesma e ainda a criação de um compilador gerador de \textbf{pseudo-código} Assembly. \\
 Posto isto tivemos então de, primeiramente, pensar e desenhar uma linguagem imperativa ao nosso gosto, seguindo os requisitos pedidos. De seguida foi necessário criarmos uma gramática que a descrevesse e, finalmente, com recurso a essa gramática, tornar possível o armazenamento dos dados vindos de um programa escrito na nossa linguagem necessários à geração do \textbf{pseudo-código} Assembly.
-
-
-\section{Especificação do Requisitos}
-\subsection{Dados}
-Os dados fornecidos são um ficheiro \textit{.bib}, este que é um ficheiro com as caracteristicas de um ficheiro \textit{BibTex}. 
-
-Cada tipo de categoria tem os seus campos obrigatórios, neste acaso o objetivo de uma das tarefas será pesquisar através do campo \textbf{author = } o nome do autor e transformá-lo no formato "N. Apelido". 
-
-O nome da categoria é seguida por uma chaveta, e o primeiro campo será o nome para a referência a ser introduzida, os campos de cada categoria são separados por vírgula e a seguir ao campo aparecerá o simbolo igual (=), deixámos um exemplo da sintaxe da categoria \textbf{$@$phdthesis} e os respetivos campos presentes: 
-
-\begin{verbatim}
-@phdthesis{Mos75a,
-author = "P. D. Mosses",
-title = "Mathematical Semantics and Compiler Generation",
-year = 1975,
-school = "Oxford University",
-annote = "compilacao incremental, atributos, ambientes prog"
-}
-\end{verbatim}
-
-É também fornecido o nome de ferramentas de apoio à resolução do problema, neste caso o \textit{Graph Viz}, que permitirá colocar gráficamente a informação dos grafos criados, sendo que tornará as iterações entre os autores mais percetiveis. 
 
 
 
@@ -215,11 +192,263 @@ Como representado na figura 1 a estrutura do nosso projeto terá de passar pelo d
 
 \section{Desenho da Linguagem}
 
+
+O analisador léxico encontra-se desenvolvido com o suporte da ferramenta 'ylex' e deteta todos os símbolos terminais da linguagem (palavras reservadas, sinais e variáveis). Este analisador efetua também a deteção de comentários (linhas precedidas pelos símbolos '//'), ignorando o texto neles contidos. De forma a facilitar a deteção os erros de sintaxe, o parser conta as linhas que já interpretou. Este funcionalidade permite ao analisador sintático informar a linha onde ocorrer a anomalia em caso de erro de processamento. 
+
+\section{Analisador sintático/semântico}
+
+O analisador sintático/semântico é o responsável por processar os tokens obtidos através do analisador léxico, 
+utilizando as produções definidas para calcular a instrução a escrever no ficheiro de output final. O ficheiro onde se encontram todas as produções denomina-se gramatica.y, 
+
+\begin{description}
+
+\item[Definição dos tokens] \hfill \\
+
+Previamente à definição das produções, estão definidos os diversos tokens assim como o tipo das diferentes variáveis presentes nas produções.
+
+\item[Produções iniciais] \hfill \\
+
+O processamento é iniciado na produção Prog, correspondente ao começo do programa. São realizadas as inserções iniciais no ficheiro de output, e as produções a serem efetuadas podem consistir numa lista de declarações, numa lista de funções, ou numa lista de instruções. Caso se encontre uma lista de declarações, é realizado o controlo de saltos de instruções, através da inserção da instrução "JUMP init" no ficheiro de output. Isto possibilita a declaração de variáveis antes da declaração das funções, de forma a que as funções possuam acesso às variáveis globais declaradas.  
+
+\item[Produções de Funções] \hfill \\
+
+A declaração de funções é precedida pelo símbolo terminal '\#', de forma a facilitar a sua leitura e distinção com outras instruções. O armazenamento das funções declaradas é realizado através da utilização de uma hashmap, e permite guardar o contexto de estas, ou seja, as declarações efetuadas dentro da função são tidas como variáveis locais, e apenas acessíveis dentro da função. No final da declaração da função, o contexto é encerrado. Por simplicidade, não é possível utilizar chamadas a funções como argumento de outra função.
+
+\item[Produções de declarações] \hfill \\
+
+As declarações de variáveis podem ocorrer dentro do contexto de uma função (i.e. variáveis locais) ou fora de qualquer contexto (i.e. variáveis globais). Desta forma, ao declarar uma variável, é efetuada o teste que verifica se está está declarada ou não dentro de uma função. Além disso, não é permitido re-declarar variáveis locais com o mesmo nome que variáveis globais já existentes, sendo apresentado um erro quando isso ocorre.
+
+\item[Produções de instruções e atribuições] \hfill \\
+
+São suportadas diversas instruções, no entanto vale a pena mencionar a instrução "return". Esta instrução calcula o endereço a retornar a partir do número de argumentos de entrada da função na qual se insere e do frame pointer (fp) salvaguardado. As atribuições permitem efetuar o incremento/decremento de variáveis através da sintaxe var++/var--, assim como atribuir o valor de expressões a variáveis escalares ou vetoriais. 
+\item[Produções de input/output] \hfill \\
+
+As produções referentes à leitura e escrita no stdin. A produção de escrita suporta a impressão de expressões, sendo que a produção de leitura armazena as variáveis atribuídas conforme o contexto definido. 
+
+\item[Produções de controlo de fluxo de execução condicional] \hfill \\
+
+A instrução de controlo de fluxo de execução condicional está definida como if...else, suportando um conjunto de instruções no seu contexto.
+
+\item[Produções de controlo de fluxo de execução cíclico] \hfill \\
+
+As produções correspondentes ao controlo de fluxo de execução cíclico suportam ciclos 'while', 'do while' e 'for'. Estas produções são suportadas por uma estrutura de dados (stack), sendo graças a esta que é possível calcular o saltos a efetuar.
+
+\item[Produções de cálculo de expressões] \hfill \\
+
+O compilador possui a capacidade de processar expressões aritméticas e lógicas, tanto em forma de declaração como em forma de cálculo do índice de um array. Estas expressões possibilitam também a utilização de parêntesis aninhados.
+
+\end{description}
+
+Nota: Na compilação do código referente ao programa yacc, é apresentado um erro de compilação do tipo shift-reduce. No entanto, este erro não provoca qualquer comportamento indesejado no programa dado que por defeito, quando em dúvida, o yacc efetua um shift ao invés de um reduce, sendo este o comportamento pretendido para este caso.
+
+
+
 \section{Desenho da Gramatica}
+Após desenhada e descrita a linguagem imperativa que iremos usar, resta transformar todas as regras que definimos sobre ela numa \textbf{GIC}.\\
+Os símbolos não-terminais da gramática que definimos são os seguintes: prog, ListaDecla, ListaFun, ListaInst, Funcao, Inst, TipoFun, IdFun, ListaArg, ListaArg2, Tipo, Decla, Var, ConjInst, Atrib, Print, Scan, If, Else, While, DoWhile, For, ForHeader
+,ForAtrib, ExpLog, Exp, Termo, Fun, FunArgs, FunArgs2, TestExpLog. 
+
+
+
+Por sua vez os símbolos terminais são: INT, WHILE, FOR, IF, ELSE, RETURN, VOID, PRINT, SCAN, DO, num, id  ";", , "(",")", "{", "}" , "=", "#", "[", "]", ">", "<". 
+
+Na concepção da nossa gramática utilizamos em todos os casos recursividade à esquerda.
+Segue-se então a gramática gerada:
+
+\begin{verbatim}
+
+Prog        : ListaDecla  ListaFun 	ListInst    		                                                              			
+            ; 
+
+ListaDecla  :                            
+            | ListaDecla Decla 
+            ;
+
+ListaFun    :   
+            | ListaFun Funcao 
+            ;
+
+ListInst    : Inst                               
+            | ListInst Inst                                    
+            ;
+
+// --------------------  FUNCAO ------------------------------------
+/** A declaração de funções é precedida pelo símbolo terminal '\#'. 
+ */
+
+Funcao      : '#' TipoFun IdFun  '(' ListaArg ')' '{' ListaDecla ListInst '}'             
+            ;
+
+TipoFun     : VOID      	                   
+            | INT                      
+            ;  
+
+IdFun 		: id 
+			;
+
+ListaArg    :   
+            | ListaArg2 ;
+
+ListaArg2   : Tipo Var                            
+            | ListaArg2  ','  Tipo Var         
+            ;
+
+Tipo 		: INT                
+			; 
+
+// --------------------DECLARACAO ------------------------------------
+
+Decla       : INT Var ';'                            		                
+            | INT Var '[' num ']' ';'   
+            | INT Var '[' num ']' '[' num ']' ';'                                                     
+            ;
+
+Var 		: id              
+			;
+
+// --------------------INSTRUCAO ------------------------------------
+
+ConjInst    :   
+            |'{' ListInst '}'               
+            ;
+
+Inst        : If                                                                  
+            | While                                     
+            | DoWhile
+            | For                                       
+            | Atrib ';'                                 
+            | Print';' 							                               
+            | Scan ';'                                 
+            | RETURN Exp ';'     
+            | ELSE                                 
+            ;
+
+// ------------------------------------ ATRIBUIÇAO ------------------------------------
+
+Atrib       : Var '=' Exp                                                                                      
+            | Var '+''+'                                                                                       
+            | Var'[' Exp ']' '=' Exp  
+            | Var'[' Exp ']' '[' Exp ']' '=' Exp  
+            ;
+
+// ------------------------------------ PRINT SCAN ------------------------------------
+
+Print:     PRINT '(' Exp ')'  		                  
+            ;
+
+Scan:      SCAN '(' Var')'   		                                
+            ;
+// ------------------------------------ IF THEN ELSE ------------------------------------
+
+If          :  IF  TestExpLog  ConjInst Else
+            ;
+
+Else        :       
+            | ELSE ConjInst 
+            ;
+
+// ------------------------------------# WHILE ---------------------------------------------
+
+While       : WHILE TestExpLog ConjInst                                    
+            ;
+
+// ------------------------------------# DO WHILE ---------------------------------------------
+
+DoWhile     : DO ConjInst WHILE TestExpLog ';'              
+            ;
+    
+// ------------------------------------# FOR ---------------------------------------------
+
+For         : FOR ForHeader ConjInst                      
+            ;
+
+ForHeader   :  '(' ForAtrib ';' ExpLog ';' ForAtrib ')' 
+            ;  
+
+ForAtrib    : Atrib  
+            ;
+
+// --------------------------------CALCULO DE EXPRESSOES ------------------------------------
+ExpLog 		: Exp 
+			|Exp '=''=' Exp 		
+			|Exp '!''=' Exp
+			|Exp '>''=' Exp 		
+			|Exp '<''=' Exp 		
+			|Exp '<' Exp 			
+			|Exp '>' Exp 			
+			; 
+
+Exp 		: Termo
+			|Exp '+' Termo  			
+			|Exp  '-' Termo 			
+			|Exp '|''|' ExpLog 
+			; 
+
+Termo		: Fun
+			| Termo '/' Fun 			
+			| Termo '*' Fun 			
+			| Termo '&''&' ExpLog
+			; 
+
+Fun 	   	: num                         
+            | Var  											                         
+            | Var '['Exp ']'                                           
+            | Var  '['Exp ']' '['Exp ']'                                      
+            | IdFun '(' FunArgs')' 
+            | '(' Exp ')'                  
+            ;                                  
+
+FunArgs     :    
+            | FunArgs2 
+            ;
+
+FunArgs2    : Exp                                
+            | FunArgs2 ',' Exp                 
+            ;
+
+TestExpLog  : '(' ExpLog ')'                                        
+            ;
+
+
+
+\end{verbatim}
+
+
+
+\section{Geração de Pseudo-Código Assembly}\label{assembly}
+
+A cada regra da gramática, são associadas ações a serem executadas à medida que estas são reconhecidas. Assim sendo, é realizada uma tradução da linguagem desenvolvida para a linguagem \emph{assembly} da VM, à medida que cada instrução ou expressão é identificada. A maioria destas ações implica uma instrução de escrita no ficheiro de output. Todas estas acções que implicam escrita no ficheiro são triviais, existindo apenas algumas exceções como o caso do ciclo 'for'.
+No ciclo 'for', é necessária a utilização de instruções 'JUMP', de forma a ser possível seguir o seu fluxo de execução normal. Após a identificação e execução das ações associadas à expressão lógica presente no ciclo 'for', é gerado o salto condicional respetivo, assim como um salto para as instruções associadas ao corpo do ciclo. Além disso, é gerada uma \emph{label} que irá corresponder ao incremento do ciclo que irá ser identificado de seguida. Identificado o final do corpo do ciclo, é efetuado um salto para a \emph{label} correspondente ao incremento do ciclo, que para além das respetivas instruções, conterá outro 'JUMP' para o teste da expressão lógica.
+
+\subsection{Funções}
+
+De forma a implementar adequadamente o processamento de funções, é necessário resolver certas implicações, sendo que esta funcionalidade obriga a tratar de diversos contextos dentro do programa (global e local).
+
+As declarações das funções são efetuadas após as declarações das variáveis globais para que dentro das funções seja possível aceder às variáveis globais.
+
+As declarações de variáveis são feitas no inicio da função, e no hash table das variáveis é guardado não apenas o endereço mas também o contexto (local ou global). Desta forma, no acesso às variáveis, utiliza-se 'PUSHG' ou 'PUSHL' seja respetivamente variável global ou local.
+
+A passagem de argumentos para a função é tratada como uma declaração especial na qual o endereço é negativo. Já o retorno da função é colocado também num endereço negativo que foi previamente alocado na chamada da função.
+
+Em forma de exemplo, assumindo a chamada de uma função com 2 argumentos. Como é possível observar na figura  os endereços são negativos ao fp, e o endereço onde a função colocará o retorno é $fp - 3$.
+Após a execução da função é feito o 'pop' dos argumentos e assim o valor de retorno da função está no topo da stack. 
+
+
+
+Para gerar o código Assembly do programa é necessário definir ações semânticas no \textit{YACC}. Estas ações semânticas são blocos de código C que são executados aquando o reconhecimento da expressão que os antecede.\\
+Na parte das declarações de variáveis é necessário inseri-las na estrutura que críamos e gerar o código Assembly para alocar memória para elas. Para isso decidimos usar variáveis globais para guardar o tamanho, o endereço, o tipo e o nome de uma variável. Sempre que o analisador sintático  reconhece uma declaração de um inteiro coloca a variável correspondente a 1 e se reconhecer um \textit{array} coloca nessa mesma variável o seu tamanho. Da mesma forma é atualizada a variável correspondente ao tipo. Quanto à variável correspondente ao endereço é uma variável global com valor inicial de zero que é incrementada sempre que uma nova variável é adicionada com sucesso à estrutura. Quando é encontrado o nome de uma variável já tem então guardado o seu tamanho e tipo e encontra-se já em condições de guardá-la na estrutura de dados. Nesta altura é feita a verificação da já existência de uma variável com o mesmo nome ou não. Caso já exista o programa termina e é gerada uma mensagem de erro. Caso contrário é gerado o código Assembly para empilhar a variável na \textit{Stack}: PUSHN X, em que X é o tamanho da variável. De seguida é incrementada a variável do endereço tantas vezes quanto o tamanho da variável. \\
+Após todas as declarações terem sido reconhecidas é gerada a instrução Assembly START que indica o início das instruções do programa.\\
+Em todas as instruções, sempre que é encontrada uma variável é feita a verificação da sua existência na estrutura. Se não existir o programa termina com um erro. Se existir, é guardado o seu registo para ser utilizado no código Assembly. No caso de se tratar de um acesso a uma posição de um \textit{array} é também feita a verificação do seu tipo.\\
+Nas instruções de atribuição o código Assembly gerado, no caso de ser uma variável inteira escalar, é apenas um STOREG X, em que X é o endereço da variável em questão. No caso de ser um acesso a um vetor, é necessário aquando do reconhecimento do nome da variável efetuar um PUSHGP seguido de um PUSHI X, em que X é o endereço da variável em causa, e de um PADD. De seguida, após o reconhecimento das expressões constituintes da atribuição é gerado um STOREN.\\
+Para as expressões, termos e condições que utilizam operadores aditivos, multiplicativos e relacionais, respetivamente, foi feito o reconhecimento de que operador estava a ser utilizado, e tendo em conta isso gerado o código Assembly respetivo a essa operação. De notar que não existe uma instrução Assembly para as operações lógicas e e ou, logo utilizamos a multiplicação e a soma, respetivamente, para representá-las.\\
+Para as instruções de escrita o único código Assembly necessário é um WRITEI.\\
+Para as instruções de leitura, no caso de a leitura ser feita para uma variável escalar, é gerado o código READ para ler uma\textit{string} do teclado, seguido do código ATOI para transformá-la num inteiro, e de seguida guardá-la no endereço da variável em questão com a instrução STOREG X, em que X é o endereço. Já no caso de se tratar de um vetor é necessário um PUSHGP seguido de um PUSHIX e de um PADD antes de proceder à leitura em si, que se dá da mesma forma que no caso do escalar, mas substituindo o STOREG por um STOREN.\\
+No caso dos ciclos utilizamos \textit{labels} para marcar o início e o fim de um ciclo. Depois de reconhecida a expressão da condição do ciclo fazemos um JZ (salta se a expressão for falsa) para a \textit{label} do fim de ciclo. No fim do ciclo temos um JUMP não condicional que salta sempre para o início do ciclo (antes da condição).\\
+Quando às instruções condicionais, recorrendo também às \textit{labels}, e aos \textit{jumps} seguimos a seguinte lógica: após a condição do \textit{if} temos um JZ para o início do bloco \textit{else} caso este exista e para o fim do \textit{if} caso contrário. 
+\section{Módulos da Aplicação}\label{modulos}
+
 
 \section{Estruturas de Dados}
-
-
 \subsection{Stack}
 
 De forma a evitar confusão na atribuição de \emph{labels} relativas a \emph{ifs} e \emph{loops} é utilizado um contador de condições. À medida que é encontrada uma instrução que implique o uso de uma condição, este contador é incrementado e o seu valor é colocado numa stack. Deste modo, o valor que se encontra no topo da stack é relativo ao último \emph{ciclo/if} encontrado. Sempre que é encontrado o final de uma condição, o valor no topo da stack é removido. Através do uso de um contador e de uma stack, é muito mais simples gerir as \emph{labels} e as operações de controlo, como \emph{JUMPs} e \emph{JZs}.
@@ -244,6 +473,27 @@ A \emph{hashmap} utilizada implementa funções necessárias para a sua inicializaç
 O principal objetivo da Makefile é facilitar a compilação e execução do programa.
 Para isso criamos o seguinte ficheiro: 
 
+\begin{verbatim}
+
+gramatica: y.tab.c lex.yy.c stack.o compilador.o hashmap.o
+		gcc -o gramatica y.tab.c stack.c compilador.c hashmap.c
+
+lex.yy.c: gramatica.l 
+			flex gramatica.l
+
+y.tab.c: gramatica.y
+			yacc -d gramatica.y
+
+stack.o: stack.c stack.h
+			gcc -c stack.c 
+compilador.o :	compilador.c compilador.h 
+			gcc -c compilador.c
+hashmap.o: hashmap.c hashmap.h
+			gcc -c hashmap.c
+
+clean: 
+	rm  *.o lex.yy.c y.tab.c y.tab.h gramatica
+\end{verbatim}
 
 
 
@@ -265,53 +515,22 @@ Para isso criamos o seguinte ficheiro:
 
 \chapter{Conclusão} \label{concl}
 
-Após a conclusão deste trabalho verificámos que não cumprimos todos os objetivos pedidos no enunciado. 
-
-Na alínea a pressupusemos que as categorias com o mesmo nome e que se diferenciavam apenas em maiúsculas ou minusculas pertenciam à mesma categoria. Pois assim não estariamos a repetir informação. 
-
-Na alínea b1 tratamos os nomes dos autores de modo a que ficassem com o formato \textbf{N.Apelido}, utilizando arrays. 
-
-Na alinea b2 não conseguimos colocar no início das categorias os campos autor e título. 
-
-Na alinea c foi implementado que o utilizador escolhesse o autor e assim gerar o grafo com os autores que publicam diretamente com ele. Um aspeto a ser melhorado poderia ser em vez de aparecerem as várias linhas que correspondem ao número de publicações conjuntas colocar apenas uma com a contagem. 
-
-Como trabalho futuro pretende-se melhorar os algoritmos que permitam um melhor funcionamento dos filtros. 
-
+Finalizado o desenvolvimento do trabalho, é possível analisar o resultado final e o impacto que as diversas decisões tiveram sobre este. Um dos principais pontos positivos consiste na implementação do processamento e compilação de funções, sendo esta a funcionalidade mais trabalhosa e sobre a qual recaiu maior parte do tempo despendido. Relativamente a estas, de notar uma mudança na forma como estas foram implementadas. Anteriormente, a estrutura relativa ao armazenamento de dados de uma função possuía a capacidade de dar acesso às variáveis declaradas dentro do seu contexto, no entanto decidiu-se que esta funcionalidade era desnecessária para o funcionamento do compilador, sendo esta informação descartada. A implementação das expressões de controlo de execução possuíram também uma dificuldade acrescida, obrigando à utilização de estruturas de dados mais complexas, tais como hashmaps e stacks. Creemos ter alcançado os objetivos definidos aquando da proposta do trabalho, tendo desenvolvido um compilador capaz de processar uma LPIS, com a possibilidade de dar feedback sobre o código de input definido e criar o ficheiro com instruções em Assembly correspondentes.
 
 
 \appendix
 \chapter{Código do Programa}
 
-Lista-se a seguir o código que foi desenvolvido para a alínea a: 
+Lista-se a seguir o código flex ------- gramatica.l  
 
 
 
-Lista-se a seguir o código que foi desenvolvido para a alínea b1: 
+Lista-se a seguir o código yacc ------ gramatica.y
 
-
-
-Lista-se a seguir o código que foi desenvolvido para a alínea b2: 
-
-
-
-Lista-se a seguir o código que foi desenvolvido para a alínea c: 
 
 
 
 \bibliographystyle{alpha}
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
