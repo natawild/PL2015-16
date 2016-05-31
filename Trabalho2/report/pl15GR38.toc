@@ -6,36 +6,49 @@
 \contentsline {chapter}{\numberline {3}Concep\c c\~ao/desenho da Resolu\c c\~ao}{5}
 \contentsline {paragraph}{}{5}
 \contentsline {section}{\numberline {3.1}Desenho da Linguagem}{5}
-\contentsline {section}{\numberline {3.2}Analisador sint\'atico/sem\^antico}{6}
-\contentsline {section}{\numberline {3.3}Desenho da Gramatica}{7}
-\contentsline {section}{\numberline {3.4}Gera\c c\~ao de Pseudo-C\'odigo Assembly}{10}
-\contentsline {subsection}{\numberline {3.4.1}Declara\c c\~ao das vari\'aveis}{10}
+\contentsline {subsection}{\numberline {3.1.1}Analisador sint\'atico/sem\^antico}{6}
+\contentsline {section}{\numberline {3.2}Desenho da Gramatica}{7}
+\contentsline {paragraph}{}{7}
+\contentsline {section}{\numberline {3.3}Gera\c c\~ao de Pseudo-C\'odigo Assembly}{10}
+\contentsline {subsection}{\numberline {3.3.1}Declara\c c\~ao das vari\'aveis}{10}
 \contentsline {paragraph}{}{10}
 \contentsline {paragraph}{}{10}
-\contentsline {subsection}{\numberline {3.4.2}Inicio do programa e vari\'aveis }{10}
+\contentsline {subsection}{\numberline {3.3.2}Inicio do programa e vari\'aveis }{10}
 \contentsline {paragraph}{}{10}
 \contentsline {paragraph}{}{10}
-\contentsline {subsection}{\numberline {3.4.3}Atribui\c c\~ao e opera\c c\~oes l\'ogicas}{11}
+\contentsline {subsection}{\numberline {3.3.3}Atribui\c c\~ao e opera\c c\~oes l\'ogicas}{10}
+\contentsline {paragraph}{}{10}
+\contentsline {subsection}{\numberline {3.3.4}Escrita}{11}
 \contentsline {paragraph}{}{11}
-\contentsline {subsection}{\numberline {3.4.4}Escrita}{11}
-\contentsline {paragraph}{}{11}
-\contentsline {subsection}{\numberline {3.4.5}Condicional}{11}
-\contentsline {subsection}{\numberline {3.4.6}Ciclos}{11}
-\contentsline {subsection}{\numberline {3.4.7}Fun\c c\~oes}{11}
-\contentsline {section}{\numberline {3.5}Estruturas de Dados}{12}
-\contentsline {subsection}{\numberline {3.5.1}Stack}{12}
-\contentsline {subsection}{\numberline {3.5.2}HashMap}{12}
+\contentsline {subsection}{\numberline {3.3.5}Condicional}{11}
+\contentsline {subsection}{\numberline {3.3.6}Ciclos}{11}
+\contentsline {subsection}{\numberline {3.3.7}Fun\c c\~oes}{11}
+\contentsline {section}{\numberline {3.4}Estruturas de Dados}{12}
+\contentsline {subsection}{\numberline {3.4.1}Stack}{12}
+\contentsline {subsection}{\numberline {3.4.2}HashMap}{12}
 \contentsline {chapter}{\numberline {4}Codifica\c c\~ao e Testes}{13}
 \contentsline {section}{\numberline {4.1}Alternativas, Decis\~oes e Problemas de Implementa\c c\~ao}{13}
 \contentsline {subsection}{\numberline {4.1.1}Makefile}{13}
-\contentsline {section}{\numberline {4.2}Testes realizados e Resultados}{14}
-\contentsline {subsection}{\numberline {4.2.1}Teste 1}{14}
+\contentsline {section}{\numberline {4.2}Testes realizados e Resultados}{13}
+\contentsline {subsection}{\numberline {4.2.1}Teste 1}{13}
+\contentsline {subsubsection}{input}{13}
+\contentsline {subsubsection}{output}{14}
 \contentsline {subsection}{\numberline {4.2.2}Teste 2}{14}
-\contentsline {subsection}{\numberline {4.2.3}Teste 3}{14}
-\contentsline {subsection}{\numberline {4.2.4}Teste 4}{14}
-\contentsline {subsection}{\numberline {4.2.5}Teste 5}{14}
-\contentsline {subsection}{\numberline {4.2.6}Teste 6}{14}
-\contentsline {chapter}{\numberline {5}Conclus\~ao}{15}
-\contentsline {chapter}{\numberline {A}C\'odigo Flex}{16}
-\contentsline {chapter}{\numberline {B}C\'odigo Yacc}{18}
-\contentsline {chapter}{\numberline {C}C\'odigo do Programa}{25}
+\contentsline {subsubsection}{input}{14}
+\contentsline {subsubsection}{output}{15}
+\contentsline {subsection}{\numberline {4.2.3}Teste 3}{16}
+\contentsline {subsubsection}{input}{16}
+\contentsline {subsubsection}{output}{16}
+\contentsline {subsection}{\numberline {4.2.4}Teste 4}{17}
+\contentsline {subsubsection}{input}{17}
+\contentsline {subsubsection}{output}{17}
+\contentsline {subsection}{\numberline {4.2.5}Teste 5}{18}
+\contentsline {subsubsection}{input}{18}
+\contentsline {subsubsection}{output}{18}
+\contentsline {subsection}{\numberline {4.2.6}Teste 6}{19}
+\contentsline {subsubsection}{input}{19}
+\contentsline {subsubsection}{output}{19}
+\contentsline {chapter}{\numberline {5}Conclus\~ao}{21}
+\contentsline {chapter}{\numberline {A}C\'odigo Flex}{22}
+\contentsline {chapter}{\numberline {B}C\'odigo Yacc}{24}
+\contentsline {chapter}{\numberline {C}C\'odigo do Programa}{31}

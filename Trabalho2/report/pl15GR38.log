@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.3.4)  31 MAY 2016 14:40
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.3.4)  31 MAY 2016 21:01
 entering extended mode
 **pl15GR38.tex
 (pl15GR38.tex
@@ -217,201 +217,200 @@ Package pdftex.def Info: grafodependencias.png used on input line 203.
  [5
 
  <./grafodependencias.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 221--222
+Underfull \hbox (badness 10000) in paragraph at lines 220--221
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 225--226
+Underfull \hbox (badness 10000) in paragraph at lines 224--225
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 229--230
+Underfull \hbox (badness 10000) in paragraph at lines 228--229
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 233--234
+Underfull \hbox (badness 10000) in paragraph at lines 232--233
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 237--238
+Underfull \hbox (badness 10000) in paragraph at lines 236--237
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 240--241
+Underfull \hbox (badness 10000) in paragraph at lines 243--244
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 244--245
+Underfull \hbox (badness 10000) in paragraph at lines 247--248
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 248--249
+Underfull \hbox (badness 10000) in paragraph at lines 251--252
 
  []
 
-[6]
-Underfull \hbox (badness 10000) in paragraph at lines 252--253
+[6] [7] [8] [9]
+Underfull \hbox (badness 10000) in paragraph at lines 446--447
 
  []
 
-[7] [8] [9]
-Underfull \hbox (badness 10000) in paragraph at lines 451--452
+
+Underfull \hbox (badness 10000) in paragraph at lines 449--450
 
  []
 
 [10]
-Underfull \hbox (badness 10000) in paragraph at lines 454--455
+Underfull \hbox (badness 10000) in paragraph at lines 453--455
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 458--460
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 466--467
+Underfull \hbox (badness 10000) in paragraph at lines 461--462
 
  []
 
 [11] [12]
 Cap\'{\i }tulo 4.
-[13
-
-] [14]
-Cap\'{\i }tulo 5.
-[15
+(testes/teste1.txt [13
 
 ]
-Ap\^endice A.
-(gramatica.l
-LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <9> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 1.
-LaTeX Font Info:    Try loading font information for OML+cmr on input line 32.
+LaTeX Font Info:    Try loading font information for OML+cmr on input line 9.
  ("C:\Program Files\MiKTeX 2.9\tex\latex\base\omlcmr.fd"
 File: omlcmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <9> not available
-(Font)              Font shape `OML/cmm/m/it' tried instead on input line 32.
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 9.
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <9> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 9.
+) (testes/assemblyteste1.vm) (testes/teste2.txt [14])
+(testes/assemblyteste2.vm) [15] (testes/teste3.txt) (testes/assemblyteste3.vm
+[16]) (testes/teste1.txt) (testes/assemblyteste1.vm [17]) (testes/teste1.txt)
+(testes/assemblyteste1.vm [18]) (testes/teste1.txt) (testes/assemblyteste1.vm
+[19]) [20]
+Cap\'{\i }tulo 5.
+[21
+
+]
+Ap\^endice A.
+(gramatica.l
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <9> on input line 35.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <6> on input line 35.
- [16
+ [22
 
-])
-[17]
+]) [23]
 Ap\^endice B.
-[18
+[24
 
-] [19]
-Overfull \hbox (44.34555pt too wide) in paragraph at lines 895--895
+] [25]
+Overfull \hbox (44.34555pt too wide) in paragraph at lines 923--923
 []\OT1/cmtt/m/n/10 Decla       : INT id ';'                               {decV
 ar($2,1,'S');fprintf(f,"pushi 0\n"); vars++; }[] 
  []
 
 
-Overfull \hbox (75.84528pt too wide) in paragraph at lines 895--895
+Overfull \hbox (75.84528pt too wide) in paragraph at lines 923--923
 []\OT1/cmtt/m/n/10 Var  : id                                      {Endereco a=g
 etEndereco($1); $$.var_nome=strdup($1); $$.valor=1;}[] 
  []
 
 
-Overfull \hbox (65.34537pt too wide) in paragraph at lines 895--895
+Overfull \hbox (65.34537pt too wide) in paragraph at lines 923--923
 []\OT1/cmtt/m/n/10 if(a.tipo ==_INTS){fprintf(f,"pushi 1\n push%c %d\n add\n st
 ore%c %d\n",a.tipoVar,a.addr, a.tipoVar, a.addr);}[] 
  []
 
 
-Overfull \hbox (249.09377pt too wide) in paragraph at lines 895--895
+Overfull \hbox (249.09377pt too wide) in paragraph at lines 923--923
 []\OT1/cmtt/m/n/10 | Var'[' Exp ']' '=' Exp            {Endereco a = getEnderec
 o($1.var_nome); fprintf(f, "push%cp \n push%c %d padd\n",(a.tipoVar=='l')? 'f' 
 : 'g',[] 
  []
 
 
-Overfull \hbox (259.59367pt too wide) in paragraph at lines 895--895
+Overfull \hbox (259.59367pt too wide) in paragraph at lines 923--923
 []\OT1/cmtt/m/n/10 | Var'[' Exp ']' '[' Exp ']' '=' Exp  {Endereco a = getEnder
 eco($1.var_nome); fprintf(f, "push%cp \n push%c %d padd\n",(a.tipoVar=='l')? 'f
 ' : 'g',[] 
  []
 
-[20]
-Overfull \hbox (159.84454pt too wide) in paragraph at lines 895--895
+[26]
+Overfull \hbox (159.84454pt too wide) in paragraph at lines 923--923
 []\OT1/cmtt/m/n/10 Scan:      SCAN '(' Var')'    {Endereco a= getEndereco($3.va
 r_nome); fprintf(f,"read\n atoi\n store%c %d\n",a.tipoVar, a.addr);}[] 
  []
 
 
-Overfull \hbox (49.5955pt too wide) in paragraph at lines 895--895
+Overfull \hbox (49.5955pt too wide) in paragraph at lines 923--923
 []\OT1/cmtt/m/n/10 DoWhile     : DO                            {total++; push(s
 ,total); fprintf(f, "ciclo%d: NOP\n", get(s));}[] 
  []
 
 
-Overfull \hbox (149.34464pt too wide) in paragraph at lines 895--895
+Overfull \hbox (149.34464pt too wide) in paragraph at lines 923--923
 []\OT1/cmtt/m/n/10 ConjInst WHILE TestExpLog ';'   {fprintf(f, "jz endciclo%d\n
  jump ciclo%d\n endciclo%d: NOP\n", get(s),get(s),get(s));pop(s);}[] 
  []
 
 
-Overfull \hbox (54.84546pt too wide) in paragraph at lines 895--895
+Overfull \hbox (54.84546pt too wide) in paragraph at lines 923--923
 []\OT1/cmtt/m/n/10 For         : FOR ForHeader ConjInst     {fprintf(f,"jump ci
 clo%dA\nendciclo%d\n", get(s), get(s)); pop(s);}[] 
  []
 
 
-Overfull \hbox (23.34573pt too wide) in paragraph at lines 895--895
+Overfull \hbox (23.34573pt too wide) in paragraph at lines 923--923
 []\OT1/cmtt/m/n/10 ForHeader   :  '(' ForAtrib ';'         {total++; push(s,tot
 al); fprintf(f,"ciclo%d: nop\n", get(s));}[] 
  []
 
 
-Overfull \hbox (75.84528pt too wide) in paragraph at lines 895--895
+Overfull \hbox (75.84528pt too wide) in paragraph at lines 923--923
 []\OT1/cmtt/m/n/10 ExpLog ';'                 {fprintf(f,"jz endciclo%d\njump c
 iclo%dB\nciclo%dA: nop\n", get(s), get(s), get(s));}[] 
  []
 
 
-Overfull \hbox (847.58855pt too wide) in paragraph at lines 895--895
+Overfull \hbox (847.58855pt too wide) in paragraph at lines 923--923
 []\OT1/cmtt/m/n/10 // ---------------------------------------------------------
 --------CALCULO DE EXPRESSOES -------------------------------------------------
 -------------------------------------------------------------------------------
 -----------------------------------------[] 
  []
 
-[21]
-Overfull \hbox (81.09523pt too wide) in paragraph at lines 895--895
+[27]
+Overfull \hbox (81.09523pt too wide) in paragraph at lines 923--923
 []\OT1/cmtt/m/n/10 | Var                       {Endereco a = getEndereco($1.var
 _nome); fprintf(f, "push%c %d\n",a.tipoVar, a.addr);}[] 
  []
 
 
-Overfull \hbox (7.59587pt too wide) in paragraph at lines 895--895
+Overfull \hbox (7.59587pt too wide) in paragraph at lines 923--923
 []\OT1/cmtt/m/n/10 '(' FunArgs')'              {fprintf(f, "call %s\n",$1); fpr
 intf(f, "pop%d\n",numeroArgumentos());}[] 
  []
 
-[22] [23] [24]
+[28] [29] [30]
 Ap\^endice C.
-[25
+[31
 
 ] (pl15GR38.aux) ) 
 Here is how much of TeX's memory you used:
- 3441 strings out of 493698
- 45062 string characters out of 3144375
+ 3476 strings out of 493698
+ 45653 string characters out of 3144375
  189052 words of memory out of 3000000
- 6748 multiletter control sequences out of 15000+200000
+ 6749 multiletter control sequences out of 15000+200000
  9973 words of font info for 35 fonts, out of 3000000 for 9000
  1025 hyphenation exceptions out of 8191
- 30i,7n,32p,1203b,1598s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 30i,7n,32p,735b,1600s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/c
 mbx10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pf
 b><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbxti10.pfb><C:/
@@ -426,9 +425,9 @@ c/amsfonts/cm/cmr5.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts
 Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy9.pfb><C:/Program F
 iles/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Program Files/MiK
 TeX 2.9/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on pl15GR38.pdf (27 pages, 489774 bytes).
+Output written on pl15GR38.pdf (33 pages, 501039 bytes).
 PDF statistics:
- 154 PDF objects out of 1000 (max. 8388607)
+ 173 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  26 words of extra memory for PDF output out of 10000 (max. 10000000)
 

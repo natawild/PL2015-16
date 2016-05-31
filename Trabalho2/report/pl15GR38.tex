@@ -140,10 +140,10 @@ O compilador foi desenvolvido com recurso ao analisador léxico Flex e ao analisa
 
 \chapter{Introdução} \label{intro}
 
-O presente trabalho enquadra-se na unidade curricular de Processamento de Linguagens da Licenciatura em Engenharia Informática da Universidade do Minho. O trabalho pretende aumentar a experiência em engenharia de linguagens, assim como incentivar o desenvolvimento de processadores de linguagens e compiladores em ambiente Linux. As ferramentas que suportam a sua implementação consistem no conjunto flex-yacc, sendo estes um gerador de analisadores léxicos e um gerador de analisadores sintáticos/semânticos, respetivamente. 
+O presente trabalho enquadra-se na unidade curricular de Processamento de Linguagens do MIEI da Universidade do Minho. O trabalho pretende aumentar a experiência em engenharia de linguagens, assim como incentivar o desenvolvimento de processadores de linguagens e compiladores em ambiente Linux. As ferramentas que suportam a sua implementação consistem no conjunto flex-yacc, sendo estes um gerador de analisadores léxicos e um gerador de analisadores sintáticos/semânticos, respetivamente. 
 
 
-Inicialmente é definida uma linguagem de programação imperativa simples, a qual deve permitir manusear variáveis do tipo inteiro assim como realizar operações básicas. As variáveis devem sem declaradas no início do programa e não pode haver re-declarações. Após a validação da linguagem criada com o docente, é desenvolvido um compilador para esta linguagem, com base na GIC criada e com recurso ao Gerador Yacc/Flex. O compilador da linguagem deve gerar pseudo-código Assembly da Máquina Virtual fornecida.
+Inicialmente é definida uma linguagem de programação imperativa simples, a qual deve permitir manusear variáveis do tipo inteiro assim como realizar operações básicas. As variáveis devem ser declaradas no início do programa e não pode haver re-declarações. Após a validação da linguagem criada com o docente, é desenvolvido um compilador para esta linguagem, com base na GIC criada e com recurso ao Gerador Yacc/Flex. O compilador da linguagem deve gerar pseudo-código Assembly da Máquina Virtual fornecida.
 
 
 \section*{Estrutura do Relatório}
@@ -151,9 +151,9 @@ Inicialmente é definida uma linguagem de programação imperativa simples, a qual 
 A elaboração deste documento teve por base a estrutura do relatório fornecida pelo docente. 
 O relatório encontra-se então estruturado da seguinte forma: no Capítulo \ref{intro} é feita uma contextualização ao assunto tratado neste trabalho, seguindo-se uma introdução onde são apresentadas as metas de aprendizagem pretendidas.
 Posteriormente, no Capítulo \ref{ae}, é exposto o enunciado do trabalho e a descrição do problema.\\
-Imediatamente após, no Capítulo \ref{cdres}, é apresentada a linguagem criada, a gramática correspondente e descrita a forma como foi gerado o código Assembly. São também descritos os módulos do programa e as estruturas utilizadas.\\
+Imediatamente após, no Capítulo \ref{cdres}, é apresentada a linguagem criada, a gramática correspondente e descrita a forma como foi gerado o código Assembly.
 No Capítulo \ref{codtestes} são apresentados os testes realizados e os seus resultados.\\
-Por último, no Capítulo \ref{concl}, faz-se uma análise crítica relativa quer ao desenvolvimento do projeto quer ao seu estado final e ainda é feita uma abordagem ao trabalho futuro. No fim do documento estará incluido ficheiros anexos com o código desenvolvido. 
+Por último, no Capítulo \ref{concl}, faz-se uma análise crítica relativa quer ao desenvolvimento do projeto quer ao seu estado final e ainda é feita uma abordagem ao trabalho futuro. No fim do documento estarão incluidos ficheiros anexos com o código desenvolvido. 
 
 \chapter{Análise e Especificação} \label{ae}
 \section{Descrição informal do problema - Enunciado}
@@ -190,7 +190,7 @@ Posto isto tivemos então de, primeiramente, pensar e desenhar uma linguagem impe
 O sistema desenvolvido é constituído por 2 modelos pricipais: gramatica.l e gramatica.y, que são respetivamente o analisador léxico e analisador sintático. 
 
 
-O analisador sintático utiliza o ficheiro compilador.h, sendo que este módulo responsável pelo tratamento das variáveis e funções existentes (adicionar/consultar variáveis).
+O analisador sintático utiliza o ficheiro compilador.h, sendo este módulo responsável pelo tratamento das variáveis e funções existentes (adicionar/consultar variáveis).
 
 O sistema utiliza também duas estruturas de dados: uma HashMap e uma Stack. A hashmap é utilizada para guardar as variáveis e as funções, enquanto que a stack permite o controlo das labels dos ciclos durante a compilação.
 
@@ -209,12 +209,11 @@ Na Figura \ref{p1:fig:dependencias}, é possível observar as dependências entre o
 
 \section{Desenho da Linguagem}
 
-O analisador léxico encontra-se desenvolvido com o suporte da ferramenta 'ylex' e deteta todos os símbolos terminais da linguagem (palavras reservadas, sinais e variáveis). Este analisador efetua também a deteção de comentários (linhas precedidas pelos símbolos '//'), ignorando o texto neles contidos. De forma a facilitar a deteção os erros de sintaxe, o parser conta as linhas que já interpretou. Este funcionalidade permite ao analisador sintático informar a linha onde ocorrer a anomalia em caso de erro de processamento. 
+O analisador léxico encontra-se desenvolvido com o suporte da função 'yylex' e deteta todos os símbolos terminais da linguagem (palavras reservadas, sinais e variáveis). Este analisador efetua também a deteção de comentários (linhas precedidas pelos símbolos '//'), ignorando o texto neles contidos. De forma a facilitar a deteção os erros de sintaxe, o parser conta as linhas que já interpretou. Este funcionalidade permite ao analisador sintático informar a linha onde ocorrer a anomalia em caso de erro de processamento. 
 
-\section{Analisador sintático/semântico}
+\subsection{Analisador sintático/semântico}
 
-O analisador sintático/semântico é o responsável por processar os tokens obtidos através do analisador léxico, 
-utilizando as produções definidas para calcular a instrução a escrever no ficheiro de output final. O ficheiro onde se encontram todas as produções denomina-se gramatica.y, 
+O analisador sintático/semântico é o responsável por processar os tokens obtidos através do analisador léxico, utilizando as produções definidas para calcular a instrução e escrever no ficheiro output final. O ficheiro onde se encontram as produções denomina-se gramatica.y. 
 
 \begin{description}
 
@@ -228,35 +227,32 @@ O processamento é iniciado na produção Prog, correspondente ao começo do program
 
 \item[Produções de Funções] \hfill \\
 
-A declaração de funções é precedida pelo símbolo terminal '\#', de forma a facilitar a sua leitura e distinção com outras instruções. O armazenamento das funções declaradas é realizado através da utilização de uma hashmap, e permite guardar o contexto de estas, ou seja, as declarações efetuadas dentro da função são tidas como variáveis locais, e apenas acessíveis dentro da função. No final da declaração da função, o contexto é encerrado. Por simplicidade, não é possível utilizar chamadas a funções como argumento de outra função.
+A declaração de funções é precedida pelo símbolo terminal '\#', de forma a facilitar a sua leitura e distinção com outras instruções. O armazenamento das funções declaradas é realizado através da utilização de uma hashmap, e permite guardar o contexto destas, ou seja, as declarações efetuadas dentro da função são tidas como variáveis locais, e apenas acessíveis dentro da função. No final da declaração da função, o contexto é encerrado. Por simplicidade, não é possível utilizar chamadas a funções como argumento de outra função.
 
 \item[Produções de declarações] \hfill \\
 
-As declarações de variáveis podem ocorrer dentro de uma função (i.e. variáveis locais) ou fora de qualquer contexto (i.e. variáveis globais). Desta forma, ao declarar uma variável, é efetuada o teste que verifica se está está declarada ou não dentro de uma função. Além disso, não é permitido re-declarar variáveis locais com o mesmo nome que variáveis globais já existentes, sendo apresentado um erro quando isso ocorre.
+As declarações de variáveis podem ocorrer dentro de uma função (i.e. variáveis locais) ou fora de qualquer contexto (i.e. variáveis globais). Desta forma, ao declarar uma variável, é efetuado o teste que verifica se está está declarada ou não dentro de uma função. Não será permitido re-declarar variáveis locais com o mesmo nome que variáveis globais já existentes, sendo apresentado um erro quando isso ocorre.
 
 \item[Produções de instruções e atribuições] \hfill \\
 
-São suportadas diversas instruções, no entanto vale a pena mencionar a instrução "return". Esta instrução calcula o endereço a retornar a partir do número de argumentos de entrada da função na qual se insere e do frame pointer (fp) salvaguardado. As atribuições permitem efetuar o incremento/decremento de variáveis através da sintaxe vars++/vars--, assim como atribuir o valor de expressões a variáveis escalares ou vetoriais. 
-\item[Produções de input/output] \hfill \\
+São suportadas diversas instruções, destacamos a "return", pois esta instrução calcula o endereço a retornar a partir do número de argumentos de entrada da função na qual se insere e do frame pointer (fp) salvaguardado. 
 
+\item[Produções de input/output] \hfill \\
 As produções referentes à leitura e escrita no stdin. A produção de escrita suporta a impressão de expressões, sendo que a produção de leitura armazena as variáveis atribuídas conforme o contexto definido. 
 
 \item[Produções de controlo de fluxo de execução condicional] \hfill \\
 
-A instrução de controlo de fluxo de execução condicional está definida como if...else, suportando um conjunto de instruções no seu contexto.
+A instrução de controlo de fluxo de execução condicional está definida como "IF TestExpLog ConjInst Else", suportando um conjunto de instruções no seu contexto, assim como testes à condição.
 
 \item[Produções de controlo de fluxo de execução cíclico] \hfill \\
 
-As produções correspondentes ao controlo de fluxo de execução cíclico suportam ciclos 'while', 'do while' e 'for'. Estas produções são suportadas por uma estrutura de dados (stack), sendo esta a que torna possível calcular os saltos a efetuar.
+As produções correspondentes ao controlo de fluxo de execução cíclico suportam ciclos (while, do...while e for) 'WHILE TestExpLog ConjInst', 'DO ConjInst WHILE TestExpLog' e 'FOR ForHeader ConjInst'. Estas produções são suportadas por uma estrutura de dados (stack), sendo esta a que torna possível calcular os saltos a efetuar.
 
 \item[Produções de cálculo de expressões] \hfill \\
 
-O compilador possui a capacidade de processar expressões aritméticas e lógicas, tanto em forma de declaração como em forma de cálculo do índice de um array. Estas expressões possibilitam também a utilização de parêntesis aninhados.
+O compilador possui a capacidade de processar expressões aritméticas e lógicas (Exp '=''=' Exp, Exp '+' Termo, Termo '*' Fun) , tanto em forma de declaração como possibilitam também a utilização de parêntesis aninhados.
 
 \end{description}
-
-Nota: Na compilação do código referente ao programa yacc, é apresentado um erro de compilação do tipo shift-reduce. No entanto, este erro não provoca qualquer comportamento indesejado no programa dado que por defeito, quando em dúvida, o yacc efetua um shift ao invés de um reduce, sendo este o comportamento pretendido para este caso.
-
 
 
 \section{Desenho da Gramatica}
@@ -264,8 +260,7 @@ Após desenhada e descrita a linguagem imperativa que iremos usar, resta transfor
 Os símbolos não-terminais da gramática que definimos são os seguintes: prog, ListaDecla, ListaFun, ListaInst, Funcao, Inst, TipoFun, IdFun, ListaArg, ListaArg2, Tipo, Decla, Var, ConjInst, Atrib, Print, Scan, If, Else, While, DoWhile, For, ForHeader
 ,ForAtrib, ExpLog, Exp, Termo, Fun, FunArgs, FunArgs2, TestExpLog. 
 
-
-
+\paragraph{}
 Por sua vez os símbolos terminais são: INT, WHILE, FOR, IF, ELSE, RETURN, VOID, PRINT, SCAN, DO, num, id  ";", , "(",")", "{", "}" , "=", "\#", "[", "]", ">", "<". 
 
 Na concepção da nossa gramática utilizamos em todos os casos recursividade à esquerda.
@@ -434,10 +429,10 @@ Para gerar o código Assembly do programa é necessário definir ações semânticas n
 \subsection{Declaração das variáveis}
 \paragraph{}
 
-Na parte das declarações de variáveis é necessário inseri-las na estrutura que críamos e gerar o código Assembly para alocar memória para elas. Para isso decidimos usar variáveis globais para guardar o tamanho, o endereço, o tipo e o nome de uma variável. Sempre que o analisador sintático  reconhece uma declaração de um inteiro coloca a variável correspondente a 1 e se reconhecer um \textit{array} coloca nessa mesma variável o seu tamanho. Da mesma forma é atualizada a variável correspondente ao tipo.
+Na parte das declarações de variáveis é necessário inseri-las na estrutura que críamos e gerar o código Assembly para alocar memória para elas. Para isso decidimos usar variáveis globais para guardar o tamanho, o endereço, o tipo e o nome de uma variável. Sempre que o analisador sintático  reconhece uma declaração de um inteiro coloca a variável correspondente a 1 e se reconhecer um \textit{array} a 1 ou 2 dimensões coloca nessa mesma variável o seu tamanho. Da mesma forma é atualizada a variável correspondente ao tipo.
 
 \paragraph{}
-Quanto à variável correspondente ao endereço é uma variável global com valor inicial de zero que é incrementada sempre que uma nova variável é adicionada com sucesso à estrutura. Quando é encontrado o nome de uma variável já tem então guardado o seu tamanho e tipo e encontra-se já em condições de guardá-la na estrutura de dados. Nesta altura é feita a verificação da já existência de uma variável com o mesmo nome ou não. Caso já exista o programa termina e é gerada uma mensagem de erro. Caso contrário é gerado o código Assembly para empilhar a variável na \textit{Stack}: PUSHN X, em que X é o tamanho da variável. De seguida é incrementada a variável do endereço tantas vezes quanto o tamanho da variável.
+Quanto à variável correspondente ao endereço é uma variável global com valor inicial de 0, que é incrementada sempre que uma nova variável é adicionada com sucesso à estrutura. Quando é encontrado o nome de uma variável já tem então guardado o seu tamanho e tipo e encontra-se em condições de guardá-la na estrutura de dados. Nesta altura é feita a verificação da existência de uma variável com o mesmo nome ou não. Caso já exista, o programa termina e é gerada uma mensagem de erro. Caso contrário é gerado o código Assembly para empilhar a variável na \textit{Stack}: PUSHN X, em que X é o tamanho da variável. De seguida é incrementada a variável do endereço tantas vezes quanto o tamanho da variável.
 \subsection{Inicio do programa e variáveis }
 \paragraph{}
 Após todas as declarações terem sido reconhecidas é gerada a instrução Assembly START que indica o início das instruções do programa.
@@ -486,7 +481,7 @@ Após a execução da função é feito o 'pop' dos argumentos e assim o valor de reto
 \section{Estruturas de Dados}
 \subsection{Stack}
 
-De forma a evitar confusão na atribuição de \emph{labels} relativas a \emph{ifs} e \emph{loops} é utilizado um contador de condições. À medida que é encontrada uma instrução que implique o uso de uma condição, este contador é incrementado e o seu valor é colocado numa stack. Deste modo, o valor que se encontra no topo da stack é relativo ao último \emph{ciclo/if} encontrado. Sempre que é encontrado o final de uma condição, o valor no topo da stack é removido. Através do uso de um contador e de uma stack, é muito mais simples gerir as \emph{labels} e as operações de controlo, como \emph{JUMPs} e \emph{JZs}.
+De forma a evitar confusão na atribuição de \emph{labels} relativas a \emph{ifs} e \emph{loops} é utilizado um contador de condições. À medida que é encontrada uma instrução que implique o uso de uma condição, este contador é incrementado e o seu valor é colocado numa stack. Deste modo, o valor que se encontra no topo da stack é relativo ao último \emph{ciclo/if} encontrado. Sempre que é encontrado o final de uma condição, o valor no topo da stack é removido. Através do uso de um contador e de uma stack, é mais simples gerir as \emph{labels} e as operações de controlo, como \emph{JUMPs} e \emph{JZs}.
 A stack utilizada implementa apenas as funções necessárias para a sua inicialização, inserção, remoção e consulta. Com as operações de push/pop são inseridos/removidos valores no topo da stack, e com a operação de get apenas é consultado o valor no topo da stack, sem que este seja removido. Esta última operação é útil para a geração de instruções 'JZ' na geração de código VM.
 
 
@@ -500,9 +495,6 @@ A \emph{hashmap} utilizada implementa funções necessárias para a sua inicializaç
 \chapter{Codificação e Testes} \label{codtestes}
 
 \section{Alternativas, Decisões e Problemas de Implementação}
-
-
-
 
 \subsection{Makefile}
 O principal objetivo da Makefile é facilitar a compilação e execução do programa.
@@ -531,28 +523,64 @@ clean:
 \end{verbatim}
 
 
-
-
 \section{Testes realizados e Resultados}
 
 \subsection{Teste 1}
+\subsubsection{input}
+Lidos 3 números, escrever o maior deles
+\lstinputlisting{./testes/teste1.txt} 
+\subsubsection{output}
+\lstinputlisting{./testes/assemblyteste1.vm} 
 
 \subsection{Teste 2}
+\subsubsection{input}
+ler N (valor dado) números e calcular e imprimir o seu somatório deles
+\lstinputlisting{./testes/teste2.txt} 
+\subsubsection{output}
+\lstinputlisting{./testes/assemblyteste2.vm} 
 
 \subsection{Teste 3}
 
+\subsubsection{input}
+Contar e imprimir os números pares de uma sequência de N números dados.
+\lstinputlisting{./testes/teste3.txt} 
+\subsubsection{output}
+\lstinputlisting{./testes/assemblyteste3.vm} 
+
 \subsection{Teste 4}
+\subsubsection{input}
+Ler e armazenar os elementos de um vetor de comprimento N; imprimir os valores por ordem crescente após fazer a ordenação do array por trocas diretas.
+\lstinputlisting{./testes/teste1.txt} 
+\subsubsection{output}
+\lstinputlisting{./testes/assemblyteste1.vm} 
 
 \subsection{Teste 5}
+\subsubsection{input}
+Ler e armazenar os elementos de uma matriz NxM; calcular e imprimir a média e máximo dessa matriz
+\lstinputlisting{./testes/teste1.txt} 
+\subsubsection{output}
+\lstinputlisting{./testes/assemblyteste1.vm} 
 
 \subsection{Teste 6}
+\subsubsection{input}
+Invocar e usar num programa seu uma funçãoo ?potencia(Base,Exp)? cujo código Assembly lhe será fornecido
+\lstinputlisting{./testes/teste1.txt} 
+\subsubsection{output}
+\lstinputlisting{./testes/assemblyteste1.vm} 
 
 
 \chapter{Conclusão} \label{concl}
 
-Finalizado o desenvolvimento do trabalho, é possível analisar o resultado final e o impacto que as diversas decisões tiveram sobre este. Um dos principais pontos positivos consiste na implementação do processamento e compilação de funções, sendo esta a funcionalidade mais trabalhosa e sobre a qual recaiu maior parte do tempo despendido. Relativamente a estas, de notar uma mudança na forma como estas foram implementadas. Anteriormente, a estrutura relativa ao armazenamento de dados de uma função possuía a capacidade de dar acesso às variáveis declaradas dentro do seu contexto, no entanto decidiu-se que esta funcionalidade era desnecessária para o funcionamento do compilador, sendo esta informação descartada. A implementação das expressões de controlo de execução possuíram também uma dificuldade acrescida, obrigando à utilização de estruturas de dados mais complexas, tais como hashmaps e stacks. Creemos ter alcançado os objetivos definidos aquando da proposta do trabalho, tendo desenvolvido um compilador capaz de processar uma LPIS, com a possibilidade de dar feedback sobre o código de input definido e criar o ficheiro com instruções em Assembly correspondentes.
+Após descrito todo o processo de desenvolvimento deste trabalho, desde o desenho da linguagem até à geração do código Assembly, passando pela construção da gramática, e apresentados os testes e respetivos resultados resta apresentar uma breve conclusão sobre todo o processo.
 
+Atualmente o projeto encontra-se totalmente funcional: recebendo um ficheiro com um programa escrito na nossa linguagem gera sempre as instruções Assembly.
+Um dos principais pontos positivos consiste na implementação do processamento e compilação de funções, sendo esta a funcionalidade mais trabalhosa e sobre a qual recaiu maior parte do tempo despendido. 
 
+A implementação das expressões de controlo de execução possuíram também uma dificuldade acrescida, obrigando à utilização de estruturas de dados mais complexas, tais como hashmaps e stacks. 
+
+Para finalizar alcançamos os objetivos definidos aquando da proposta do trabalho, tendo-se desenvolvido um compilador capaz de processar uma LPIS, com a possibilidade de dar feedback sobre o código de input definido e criar o ficheiro com instruções em Assembly correspondentes.
+
+Uma dificuldade apresentada pelo grupo foi a implementação da funcionalidade dos arrays de duas dimensões, pois sendo muito semlhante aos arrays de uma dimensão foi mais complicado entender os acessos à 
 
 \appendix
 \chapter{Código Flex}

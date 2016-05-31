@@ -1,0 +1,39 @@
+pushi 0
+pushi 0
+pushi 0
+pushi 0
+start
+jump inicio
+inicio:nop
+read
+ atoi
+ storeg 0
+pushi 0
+storeg 2
+pushi 0
+storeg 1
+ciclo1: nop
+pushg 1
+pushg 0
+inf
+jz endciclo1
+jump ciclo1B
+ciclo1A: nop
+pushi 1
+ pushg 1
+ add
+ storeg 1
+jump ciclo1
+ciclo1B: nop
+read
+ atoi
+ storeg 3
+pushg 3
+pushg 2
+add
+storeg 2
+jump ciclo1A
+endciclo1
+pushg 2
+writei
+stop

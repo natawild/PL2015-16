@@ -1,0 +1,35 @@
+pushi 0
+pushi 0
+pushi 0
+pushi 0
+start
+jump inicio
+inicio:nop
+read
+ atoi
+ storeg 0
+read
+ atoi
+ storeg 1
+read
+ atoi
+ storeg 2
+pushg 0
+storeg 3
+pushg 3
+pushg 1
+inf
+jz endCond1
+pushg 1
+storeg 3
+ endCond1
+pushg 3
+pushg 2
+inf
+jz endCond2
+pushg 2
+storeg 3
+ endCond2
+pushg 3
+writei
+stop
